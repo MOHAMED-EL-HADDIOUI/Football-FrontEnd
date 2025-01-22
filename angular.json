@@ -23,8 +23,10 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "public",
+
+              },
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"
@@ -90,9 +92,26 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "public/assets/css/style.css",
+              "public/assets/css/animate.css",
+              "public/assets/css/bootsnav.css",
+              "public/assets/css/bootstrap.min.css",
+              "public/assets/css/flaticon.css",
+              "public/assets/css/font-awesome.min.css",
+              "public/assets/css/linearicons.css",
+              "public/assets/css/owl.carousel.min.css",
+              "public/assets/css/owl.theme.default.min.css",
+              "public/assets/css/responsive.css"
             ],
-            "scripts": []
+            "scripts": [
+              "public/assets/js/bootsnav.js",
+              "public/assets/js/bootstrap.min.js",
+              "public/assets/js/custom.js",
+              "public/assets/js/feather.min.js",
+              "public/assets/js/jquery.js",
+              "public/assets/js/owl.carousel.min.js"
+            ]
           }
         }
       }
