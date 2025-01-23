@@ -12,10 +12,7 @@ body {
   margin: 0 auto;
   padding: 0 1rem;
 }
-header{
-  display: block;
-  position: relative;
-}
+
 .hero{
   background-image: url("/assets/bg_3.jpg");
 }

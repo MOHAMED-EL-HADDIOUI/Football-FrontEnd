@@ -1,19 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {HeaderComponent} from '../header/header.component';
+import {FooterComponent} from '../footer/footer.component';
 
 @Component({
   standalone: true,
   selector: 'app-home',
   templateUrl: './home.component.html',
   imports: [
-    NgIf,
     NgForOf,
-    NgOptimizedImage
+    HeaderComponent,
+    FooterComponent
   ],
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  isMenuOpen = false;
   videos = [
     { title: 'Ronaldo to stay at Real Madrid?', url: '/assets/img_1.jpg' },
     { title: 'Kai Havertz Double To Secure', url: '/assets/img_2.jpg' },
@@ -22,8 +23,6 @@ export class HomeComponent implements OnInit {
   ];
   ngOnInit(): void {
   }
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
+
 
 }

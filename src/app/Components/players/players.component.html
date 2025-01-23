@@ -1,0 +1,64 @@
+<app-header></app-header>
+<section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero" id="hero">
+  <div class="absolute inset-0 bg-black bg-opacity-50">
+    <div class="container mx-auto h-full flex flex-col justify-center text-white px-10 py-10 md:py-0">
+      <div class="flex mb-6">
+        <input
+          type="text"
+          class="p-3 flex-grow rounded text-black mr-2"
+          [(ngModel)]="searchKeyword"
+          placeholder="Search players..."
+        />
+        <button
+          class="bg-gray-800 text-white px-8 py-2 rounded"
+          (click)="searchPlayers()"
+        >
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="players.length > 0; else noResults">
+        <div *ngFor="let player of players" class="p-3 bg-white text-black mb-3 rounded">
+          <div class="flex items-center space-x-4">
+            <img
+              [src]="player.imageUrl || 'default-player.png'"
+              alt="Player Image"
+              class="w-12 h-12 rounded-full"
+            />
+            <div>
+              <h3 class="text-xl font-bold">{{ player.name }}</h3>
+              <p class="text-sm text-gray-600">
+                Club: {{ player.currentClub.name }} | Position: {{ player.position }}
+              </p>
+              <p>Market Value: €{{ player.marketValueInEur | number }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-center items-center mt-4">
+          <button
+            class="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
+            [disabled]="page === 0"
+            (click)="changePage(page - 1)"
+          >
+            Previous
+          </button>
+
+          <button
+            class="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
+            [disabled]="page >= totalPages - 1"
+            (click)="changePage(page + 1)"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      <ng-template #noResults>
+        <p class="text-center text-lg">No players found.</p>
+      </ng-template>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>
