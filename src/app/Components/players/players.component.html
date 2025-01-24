@@ -5,12 +5,21 @@
       <div class="flex mb-6">
         <input
           type="text"
-          class="p-3 flex-grow rounded text-black mr-2"
+          class="p-3 flex-grow rounded text-black mr-4"
           [(ngModel)]="searchKeyword"
           placeholder="Search players..."
         />
+        <select
+          [(ngModel)]="searchCriteria"
+          class="p-3 rounded text-black mr-4"
+        >
+          <option value="name">Name</option>
+          <option value="position">Position</option>
+          <option value="currentclub">Current Club</option>
+          <option value="competition">Competition</option>
+        </select>
         <button
-          class="bg-gray-800 text-white px-8 py-2 rounded"
+          class="bg-gray-800 text-white px-10 py-2 rounded ml-4"
           (click)="searchPlayers()"
         >
           Search
@@ -18,7 +27,7 @@
       </div>
 
       <div *ngIf="players.length > 0; else noResults">
-        <div *ngFor="let player of players" class="p-3 bg-white text-black mb-3 rounded">
+        <div *ngFor="let player of players" class="p-3 bg-blue-50 text-black mb-3 rounded">
           <div class="flex items-center space-x-4">
             <img
               [src]="player.imageUrl || 'default-player.png'"
@@ -28,7 +37,7 @@
             <div>
               <h3 class="text-xl font-bold">{{ player.name }}</h3>
               <p class="text-sm text-gray-600">
-                Club: {{ player.currentClub.name }} | Position: {{ player.position }}
+                Club : {{ player.currentClub.name }}   |   Position : {{ player.position }}   |    Competition :  {{player.competition.name}}
               </p>
               <p>Market Value: €{{ player.marketValueInEur | number }}</p>
             </div>
@@ -38,17 +47,17 @@
         <!-- Pagination Controls -->
         <div class="flex justify-center items-center mt-4">
           <button
-            class="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
+            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
             [disabled]="page === 0"
-            (click)="changePage(page - 1)"
+           (click)="changePage('left')"
           >
             Previous
           </button>
-
+          <span class="w-1/12"> {{this.page}} / </span>
           <button
-            class="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
-            [disabled]="page >= totalPages - 1"
-            (click)="changePage(page + 1)"
+            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
+            [disabled]="page >= totalPages"
+            (click)="changePage('right')"
           >
             Next
           </button>

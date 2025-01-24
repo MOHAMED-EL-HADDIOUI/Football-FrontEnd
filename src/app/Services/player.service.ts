@@ -13,7 +13,7 @@ export class PlayerService {
 
   constructor(private http: HttpClient) {}
 
-  getPlayers(keyword: string, page: number): Observable<PlayersDTO> {
-    return this.http.get<PlayersDTO>(this.apiUrl+"?name="+keyword+"&page="+page);
+  getPlayers(keyword: string,criteria: string, page: number): Observable<PlayersDTO> {
+    return this.http.get<PlayersDTO>(this.apiUrl+"?name="+keyword+"&page="+page+"&criteria="+criteria);
   }
 }

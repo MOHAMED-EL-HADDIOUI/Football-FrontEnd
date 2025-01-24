@@ -1,11 +1,66 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {PlayerDTO} from '../../Models/PlayerDTO';
+import {PlayerService} from '../../Services/player.service';
+import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
+import {HeaderComponent} from '../header/header.component';
+import {HttpClientModule} from '@angular/common/http';
+import {FooterComponent} from '../footer/footer.component';
+import {FormsModule} from '@angular/forms';
+import {GameDTO} from '../../Models/GameDTO';
+import {MatcheService} from '../../Services/matche.service';
 
 @Component({
   selector: 'app-matches',
-  imports: [],
+  standalone: true,
+  imports: [
+    NgForOf,
+    HeaderComponent,
+    FooterComponent,
+    FormsModule,
+    HttpClientModule,
+    NgIf
+  ],
   templateUrl: './matches.component.html',
   styleUrl: './matches.component.css'
 })
-export class MatchesComponent {
+export class MatchesComponent implements OnInit {
+  games: GameDTO[] = [];
+  searchKeyword = '';
+  page = 0;
+  searchCriteria = 'Club'; // Par défaut, critère de recherche = 'name'
+  totalPages: number = 0;
 
+  constructor(private matcheService: MatcheService) {
+  }
+
+  ngOnInit(): void {
+    this.loadGames();
+  }
+
+  loadGames(): void {
+    this.matcheService.getGames(this.searchKeyword,this.searchCriteria, this.page).subscribe(
+      (data) => {
+        this.games = data.gameDTOS;
+        this.totalPages = data.totalPage; // Assuming the service returns total players count
+      },
+      (error) => {
+        console.error('Error fetching games:', error);
+      }
+    );
+  }
+
+  searchGames(): void {
+    this.page = 0;
+    this.loadGames();
+  }
+
+  changePage(d: string): void {
+    console.log("this.totalPages " + this.totalPages)
+    if (d === 'left') {
+      this.page = this.page - 1;
+    } else {
+      this.page = this.page + 1;
+    }
+    this.loadGames();
+  }
 }

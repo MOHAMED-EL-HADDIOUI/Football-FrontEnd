@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+}
+
+.container {
+  max-width: 850px;
+  margin: 1rem auto;
+  padding: 0 0.5rem;
+}
+
+.hero {
+  background-image: url("/assets/bg_1.jpg");
+  background-size: cover;
+  background-position: center;
+}
