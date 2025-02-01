@@ -1,1 +1,66 @@
-<p>competitions works!</p>
+<app-header></app-header>
+<section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero" id="hero">
+  <div class="absolute inset-0 bg-black bg-opacity-50">
+    <div class="container mx-auto h-full flex flex-col justify-center text-white px-10 py-10 md:py-0">
+      <div class="flex mb-6">
+        <input
+          type="text"
+          class="p-3 flex-grow rounded text-black mr-4"
+          [(ngModel)]="searchKeyword"
+          placeholder="Search competitions..."
+        />
+        <button
+          class="bg-gray-800 text-white px-10 py-2 rounded ml-4"
+          (click)="searchCompetitions()"
+        >
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="competitions.length > 0; else noResults">
+        <div *ngFor="let competition of competitions" class="p-3 bg-blue-50 text-black mb-3 rounded">
+          <div class="flex items-center space-x-4">
+            <a (click)="navigateToCompetition(competition.competitionId)">
+            <img
+              [attr.src]="'https://tmssl.akamaized.net//images/logo/header/' + competition.url.split('/').pop()?.toLowerCase()+ '.png'"
+              alt="Competition Image"
+              class="w-12 h-12 rounded-full"
+            />
+            </a>
+            <div>
+              <h3 class="text-xl font-bold">{{ competition.name }}</h3>
+              <p class="text-sm text-gray-600">
+                Code : {{ competition.competitionCode }}   |   Type : {{ competition.type }}   |    Country :  {{competition.countryName}}
+              </p>
+              <p>Confederation: {{ competition.confederation }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-center items-center mt-4">
+          <button
+            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
+            [disabled]="page === 1"
+            (click)="changePage('left')"
+          >
+            Previous
+          </button>
+          <span class="w-1/8"> {{this.page}} / {{this.totalpage}}</span>
+          <button
+            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
+            [disabled]="page >= totalpage"
+            (click)="changePage('right')"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      <ng-template #noResults>
+        <p class="text-center text-lg">No Competitions found.</p>
+      </ng-template>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

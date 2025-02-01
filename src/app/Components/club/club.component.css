@@ -15,7 +15,13 @@ body {
 }
 
 .hero {
+  background-image: url("/assets/bg_1.jpg");
   background-size: cover;
-  background-image: url("/assets/bg_3.jpg");
   background-position: center;
 }
+.joueurs {
+  background-image: url("/assets/qq.jpeg");
+  background-size: cover;
+  background-position: center;
+}
+

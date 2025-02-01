@@ -23,7 +23,6 @@ export interface PlayerDTO {
   imageUrl: string;
   url: string;
   competition: CompetitionDTO;
-
   currentClubName: string;
   marketValueInEur: number;
   highestMarketValueInEur: number;

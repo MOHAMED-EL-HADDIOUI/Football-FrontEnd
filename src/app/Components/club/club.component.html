@@ -1,0 +1,70 @@
+<app-header></app-header>
+<section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero" id="hero">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center">
+    <div class="container mx-auto text-white px-6 py-12 md:py-0">
+      <h1 class="text-5xl font-extrabold mb-4">{{ club.name }}</h1>
+      <!-- Club Image Positioned Below Title -->
+      <div class="flex justify-center mb-6">
+        <img
+          [attr.src]="'https://tmssl.akamaized.net//images/wappen/head/' + club.url.split('/').pop() + '.png'"
+          alt="Club Image"
+          class="w-32 h-32 object-contain rounded-full shadow-lg border border-gray-200 bg-white p-2"
+        />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
+        <div>
+          <p *ngIf="club.clubCode"><strong>Code :</strong> {{ club.clubCode }}</p>
+          <p *ngIf="club.coachName"><strong>Coach :</strong> {{ club.coachName }}</p>
+          <p *ngIf="club.averageAge"><strong>Average Age :</strong> {{ club.averageAge }}</p>
+          <p *ngIf="club.domesticCompetition?.name"><strong>Competition :</strong> {{ club.domesticCompetition.name }}
+          </p>
+        </div>
+
+        <div>
+          <p *ngIf="club.stadiumName"><strong>Stadium :</strong> {{ club.stadiumName }}</p>
+          <p *ngIf="club.stadiumSeats"><strong>Stadium Seats :</strong> {{ club.stadiumSeats }}</p>
+          <p *ngIf="club.totalMarketValue"><strong>Market Value :</strong> €{{ club.totalMarketValue }}</p>
+          <p *ngIf="club.nationalTeamPlayers"><strong>National Team Players :</strong> {{ club.nationalTeamPlayers }}
+          </p>
+          <p *ngIf="club.foreignersNumber"><strong>Foreign Players :</strong> {{ club.foreignersNumber }}
+            ({{ club.foreignersPercentage }}%)</p>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <p *ngIf="club.totalMarketValue" class="text-lg italic">
+          <strong>Total Market Value :</strong> {{ club.totalMarketValue | currency:'EUR' }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="py-10 joueurs">
+  <div class="container mx-auto ">
+  <h2 class="text-gray-800 text-2xl font-bold mb-8">Joueurs</h2>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div *ngFor="let player of players" class="bg-white rounded-lg shadow-lg p-3 bg-gray-300">
+      <img [src]="player.imageUrl" class="w-full h-40 object-cover rounded-md" alt="Photo du joueur">
+      <h3 class="text-xl font-semibold mt-2">{{ player.name }}</h3>
+      <p class="text-gray-600">Position: {{ player.position }}</p>
+      <p class="text-gray-600">Valeur: {{ player.marketValueInEur | currency:'EUR' }}</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-between mt-6">
+    <button (click)="changePage('left')" [disabled]="page <= 1" class="px-4 py-2 bg-gray-800 text-white rounded">
+      Précédent
+    </button>
+    <span>Page {{ page }} / {{ totalpage }}</span>
+    <button (click)="changePage('right')" [disabled]="page >= totalpage"
+            class="px-4 py-2 bg-gray-800 text-white rounded">
+      Suivant
+    </button>
+  </div>
+  </div>
+</section>
+<app-footer></app-footer>

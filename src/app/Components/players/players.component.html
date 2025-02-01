@@ -29,11 +29,13 @@
       <div *ngIf="players.length > 0; else noResults">
         <div *ngFor="let player of players" class="p-3 bg-blue-50 text-black mb-3 rounded">
           <div class="flex items-center space-x-4">
+            <a (click)="navigateToPlayer(player.playerId)">
             <img
               [src]="player.imageUrl || 'default-player.png'"
               alt="Player Image"
               class="w-12 h-12 rounded-full"
             />
+            </a>
             <div>
               <h3 class="text-xl font-bold">{{ player.name }}</h3>
               <p class="text-sm text-gray-600">
@@ -48,15 +50,15 @@
         <div class="flex justify-center items-center mt-4">
           <button
             class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page === 0"
+            [disabled]="page === 1"
            (click)="changePage('left')"
           >
             Previous
           </button>
-          <span class="w-1/12"> {{this.page}} / </span>
+          <span class="w-1/8"> {{this.page}} / {{this.totalpage}}</span>
           <button
             class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page >= totalPages"
+            [disabled]="page >= totalpage"
             (click)="changePage('right')"
           >
             Next

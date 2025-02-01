@@ -1,0 +1,65 @@
+import {Component, OnInit} from '@angular/core';
+import {ClubsService} from '../../Services/clubs.service';
+import {FooterComponent} from '../footer/footer.component';
+import {HeaderComponent} from '../header/header.component';
+import {ActivatedRoute, Route} from '@angular/router';
+import {ClubDTO} from '../../Models/ClubDTO';
+import {CurrencyPipe, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {PlayerService} from '../../Services/player.service';
+import {PlayerDTO} from '../../Models/PlayerDTO';
+@Component({
+  selector: 'app-club',
+  standalone:true,
+  imports: [
+    FooterComponent,
+    HeaderComponent,
+    CurrencyPipe,
+    NgForOf,
+    NgIf
+  ],
+  templateUrl: './club.component.html',
+  styleUrl: './club.component.css'
+})
+export class ClubComponent implements OnInit {
+  club!: ClubDTO;
+  players: PlayerDTO[] = [];
+  page = 1;
+  totalpage: number = 0;
+  clubId:number=0;
+
+
+  constructor(private route: ActivatedRoute, private clubService: ClubsService,private playerService :PlayerService) {}
+
+  ngOnInit(): void {
+    this.clubId = Number(this.route.snapshot.paramMap.get('id'));
+    this.getClub(this.clubId);
+    this.getListPlayersByCurrentClub(this.clubId,this.page-1);
+  }
+
+  getClub(clubId: number):void{
+    this.clubService.getClubById(clubId).subscribe((data) => {
+      this.club = data;
+    });
+}
+  getListPlayersByCurrentClub(clubId: number,page :number):void{
+    this.playerService.getListPlayersByCurrentClub(clubId, page).subscribe(
+      (data) => {
+        this.players = data.playerDTOS;
+        this.totalpage = data.totalpage; // Assuming the service returns total players count
+      },
+      (error) => {
+        console.error('Error fetching players:', error);
+      }
+    );
+
+  }
+  changePage(d: string): void {
+    if (d === 'left') {
+      this.page = this.page - 1;
+    } else {
+      this.page = this.page + 1;
+    }
+    this.getListPlayersByCurrentClub(this.clubId,this.page-1);
+  }
+
+}

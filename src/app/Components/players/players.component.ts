@@ -7,6 +7,7 @@ import {PlayerDTO} from '../../Models/PlayerDTO';
 import {PlayerService} from '../../Services/player.service';
 import {HttpClientModule} from '@angular/common/http';
 import {PlayersDTO} from '../../Models/PlayersDTO';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-players',
@@ -26,11 +27,11 @@ import {PlayersDTO} from '../../Models/PlayersDTO';
 export class PlayersComponent implements OnInit {
   players: PlayerDTO[] = [];
   searchKeyword = '';
-  page = 0;
+  page = 1;
   searchCriteria = 'name'; // Par défaut, critère de recherche = 'name'
-  totalPages: number = 0;
+  totalpage: number = 0;
 
-  constructor(private playerService: PlayerService) {
+  constructor(private playerService: PlayerService,private router: Router) {
   }
 
   ngOnInit(): void {
@@ -38,10 +39,10 @@ export class PlayersComponent implements OnInit {
   }
 
   loadPlayers(): void {
-    this.playerService.getPlayers(this.searchKeyword,this.searchCriteria, this.page).subscribe(
+    this.playerService.getPlayers(this.searchKeyword,this.searchCriteria, this.page-1).subscribe(
       (data) => {
         this.players = data.playerDTOS;
-        this.totalPages = data.totalPage; // Assuming the service returns total players count
+        this.totalpage = data.totalpage; // Assuming the service returns total players count
       },
       (error) => {
         console.error('Error fetching players:', error);
@@ -50,17 +51,20 @@ export class PlayersComponent implements OnInit {
   }
 
   searchPlayers(): void {
-    this.page = 0;
+    this.page = 1;
     this.loadPlayers();
   }
 
   changePage(d: string): void {
-    console.log("this.totalPages " + this.totalPages)
+    console.log("this.totalPages " + this.totalpage)
     if (d === 'left') {
       this.page = this.page - 1;
     } else {
       this.page = this.page + 1;
     }
     this.loadPlayers();
+  }
+  navigateToPlayer(id_player: number) {
+    this.router.navigate(['/players/', id_player]);
   }
 }

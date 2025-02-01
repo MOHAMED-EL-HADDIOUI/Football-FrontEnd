@@ -26,9 +26,9 @@ import {MatcheService} from '../../Services/matche.service';
 export class MatchesComponent implements OnInit {
   games: GameDTO[] = [];
   searchKeyword = '';
-  page = 0;
+  page = 1;
   searchCriteria = 'Club'; // Par défaut, critère de recherche = 'name'
-  totalPages: number = 0;
+  totalpage: number = 0;
 
   constructor(private matcheService: MatcheService) {
   }
@@ -38,10 +38,10 @@ export class MatchesComponent implements OnInit {
   }
 
   loadGames(): void {
-    this.matcheService.getGames(this.searchKeyword,this.searchCriteria, this.page).subscribe(
+    this.matcheService.getGames(this.searchKeyword,this.searchCriteria, this.page-1).subscribe(
       (data) => {
         this.games = data.gameDTOS;
-        this.totalPages = data.totalPage; // Assuming the service returns total players count
+        this.totalpage = data.totalpage; // Assuming the service returns total players count
       },
       (error) => {
         console.error('Error fetching games:', error);
@@ -50,12 +50,11 @@ export class MatchesComponent implements OnInit {
   }
 
   searchGames(): void {
-    this.page = 0;
+    this.page = 1;
     this.loadGames();
   }
 
   changePage(d: string): void {
-    console.log("this.totalPages " + this.totalPages)
     if (d === 'left') {
       this.page = this.page - 1;
     } else {

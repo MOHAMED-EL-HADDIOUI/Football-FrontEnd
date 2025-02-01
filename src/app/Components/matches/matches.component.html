@@ -27,8 +27,13 @@
       </div>
 
       <div *ngIf="games.length > 0; else noResults">
-        <div *ngFor="let game of games" class="p-3 bg-blue-50 text-black mb-3 rounded">
+        <div *ngFor="let game of games" class="p-2 bg-blue-50 text-black mb-2 rounded">
           <div class="flex items-center space-x-4">
+            <img
+              src="assets/match.jpg"
+              alt="Match Image"
+              class="w-16 h-16 rounded-full"
+            />
             <div>
               <h3 class="text-xl font-bold">{{game.homeClub.name }}  {{game.homeClubGoals}} - {{game.awayClubGoals}} {{game.awayClub.name}}</h3>
               <p class="text-gray-600">
@@ -38,20 +43,19 @@
             </div>
           </div>
         </div>
-
         <!-- Pagination Controls -->
         <div class="flex justify-center items-center mt-4">
           <button
             class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page === 0"
+            [disabled]="page === 1"
             (click)="changePage('left')"
           >
             Previous
           </button>
-          <span class="w-1/12"> {{this.page}} / </span>
+          <span class="w-1/8"> {{this.page}} /{{this.totalpage}} </span>
           <button
             class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page >= totalPages"
+            [disabled]="page >= totalpage"
             (click)="changePage('right')"
           >
             Next

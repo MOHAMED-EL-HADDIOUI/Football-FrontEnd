@@ -1,0 +1,55 @@
+<app-header></app-header>
+<section class="relative min-h-[200px] h-[200px] md:h-screen bg-cover bg-center hero" id="hero">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center">
+    <div class="container mx-auto text-white px-6 py-12 md:py-0">
+      <h1 class="text-5xl font-extrabold mb-4">{{ competition.name }}</h1>
+      <!-- Club Image Positioned Below Title -->
+      <div class="flex justify-center mb-6">
+        <img
+          [attr.src]="'https://tmssl.akamaized.net//images/logo/header/' + competition.url.split('/').pop()?.toLowerCase()+ '.png'"
+          alt="Club Image"
+          class="w-32 h-32 object-contain rounded-full shadow-lg border border-gray-200 bg-white p-2"
+        />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
+
+        <div>
+          <p *ngIf="competition.countryName"><strong>Country :</strong> {{ competition.countryName }}</p>
+          <p *ngIf="competition.type"><strong>Type :</strong> {{ competition.type }}</p>
+          <p *ngIf="competition.confederation"><strong>Confederation :</strong> {{ competition.confederation }}</p>
+          <p *ngIf="competition.domesticLeagueCode"><strong>League Code :</strong> {{ competition.domesticLeagueCode }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="py-10 clubs">
+  <div class="container mx-auto ">
+  <h2 class="text-gray-800 text-2xl font-bold mb-8">Clubs</h2>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div *ngFor="let club of clubs" class="bg-white rounded-lg shadow-lg p-3">
+      <img [attr.src]="'https://tmssl.akamaized.net//images/wappen/head/' + club.url.split('/').pop() + '.png'" class="w-full h-40 object-cover rounded-md" alt="logo du club">
+      <h3 class="text-xl font-semibold mt-2">{{ club.name }}</h3>
+      <p class="text-gray-600">Stadium: {{ club.stadiumName }}</p>
+      <p class="text-gray-600" *ngIf="club.totalMarketValue">Valeur: {{ club.totalMarketValue}}</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-between mt-6">
+    <button (click)="changePage('left')" [disabled]="page <= 1" class="px-4 py-2 bg-gray-800 text-white rounded">
+      Précédent
+    </button>
+    <span>Page {{ page }} / {{ totalpage }}</span>
+    <button (click)="changePage('right')" [disabled]="page >= totalpage"
+            class="px-4 py-2 bg-gray-800 text-white rounded">
+      Suivant
+    </button>
+  </div>
+  </div>
+</section>
+<app-footer></app-footer>
