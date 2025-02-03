@@ -17,7 +17,8 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
         <!-- Left Column -->
         <div>
-          <p *ngIf="player.dateOfBirth"><strong>Date of Birth :</strong> {{ player.dateOfBirth | date:'dd/MM/yyyy' }}</p>
+          <p *ngIf="player.dateOfBirth"><strong>Date of Birth :</strong> {{ player.dateOfBirth | date:'dd/MM/yyyy' }}
+          </p>
           <p *ngIf="player.countryOfBirth"><strong>Country of Birth :</strong> {{ player.countryOfBirth }}</p>
           <p *ngIf="player.cityOfBirth"><strong>City of Birth :</strong> {{ player.cityOfBirth }}</p>
           <p *ngIf="player.countryOfCitizenship"><strong>Citizenship :</strong> {{ player.countryOfCitizenship }}</p>
@@ -28,15 +29,132 @@
 
         <!-- Right Column -->
         <div>
-          <p *ngIf="player.currentClubName"><strong>Current Club :</strong> {{ player.currentClubName }}</p>
-          <p *ngIf="player.contractExpirationDate"><strong>Contract Expiration :</strong> {{ player.contractExpirationDate | date:'dd/MM/yyyy' }}</p>
+          <a (click)="navigateToClub(player.currentClub.clubId)">
+            <p *ngIf="player.currentClub?.name"><strong>Current Club :</strong> {{ player.currentClub.name }}</p>
+          </a>
+          <p *ngIf="player.contractExpirationDate"><strong>Contract Expiration
+            :</strong> {{ player.contractExpirationDate | date:'dd/MM/yyyy' }}</p>
           <p *ngIf="player.agentName"><strong>Agent Name :</strong> {{ player.agentName }}</p>
-          <p *ngIf="player.competition?.name"><strong>Competition :</strong> {{ player.competition.name }}</p>
-          <p *ngIf="player.marketValueInEur"><strong>Market Value :</strong> {{ player.marketValueInEur | currency:'EUR' }}</p>
-          <p *ngIf="player.highestMarketValueInEur"><strong>Highest Market Value :</strong> {{ player.highestMarketValueInEur | currency:'EUR' }}</p>
+          <a (click)="navigateToCompetition(player.competition.competitionId)">
+            <p *ngIf="player.competition?.name"><strong>Competition :</strong> {{ player.competition.name }}</p>
+          </a>
+          <p *ngIf="player.marketValueInEur"><strong>Market Value
+            :</strong> {{ player.marketValueInEur | currency:'EUR' }}</p>
+          <p *ngIf="player.highestMarketValueInEur"><strong>Highest Market Value
+            :</strong> {{ player.highestMarketValueInEur | currency:'EUR' }}</p>
           <p *ngIf="player.subPosition"><strong>Sub Position :</strong> {{ player.subPosition }}</p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+<section class="py-10 transfers" *ngIf="transfers.length">
+  <div class="container mx-auto">
+    <h2 class="text-gray-800 text-2xl font-bold mb-8 text-center">Historique des Transferts</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div *ngFor="let transfer of transfers" class="bg-white rounded-lg shadow-lg p-5 border transfer">
+        <!-- Player Info -->
+        <div class="flex items-center space-x-4 mb-4">
+          <img src="{{transfer.player.imageUrl}}" alt="Joueur" class="w-12 h-12 rounded-full">
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">{{ transfer.playerName }}</h3>
+            <p class="text-gray-600 text-sm">Saison : <span class="font-medium">{{ transfer.transferSeason }}</span></p>
+          </div>
+        </div>
+
+        <!-- Clubs & Transfer Details -->
+        <div class="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
+          <div class="text-center">
+            <p class="text-gray-700 text-sm font-medium">De</p>
+            <a (click)="navigateToClub(transfer.fromClub.clubId)"
+               class="text-blue-600 hover:underline text-lg font-semibold">
+              {{ transfer.fromClubName }}
+            </a>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <span class="text-gray-500">➡️</span>
+            <span class="text-sm text-gray-600">{{ transfer.transferDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+
+          <div class="text-center">
+            <p class="text-gray-700 text-sm font-medium">À</p>
+            <a (click)="navigateToClub(transfer.toClub.clubId)"
+               class="text-green-600 hover:underline text-lg font-semibold">
+              {{ transfer.toClubName }}
+            </a>
+          </div>
+        </div>
+
+        <!-- Fees & Market Value -->
+        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+          <p class="text-gray-700"><strong>Montant :</strong>
+            <span class="text-gray-900 font-semibold">{{ transfer.transferFee | currency:'EUR' }}</span>
+          </p>
+          <p class="text-gray-700"><strong>Valeur Marché :</strong>
+            <span class="text-gray-900 font-semibold">{{ transfer.marketValueInEur | currency:'EUR' }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center items-center mt-6 space-x-4">
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="page === 1" (click)="changePage('left')">
+        Previous
+      </button>
+      <span class="text-lg font-semibold">{{ page }} / {{ totalpage }}</span>
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="page >= totalpage" (click)="changePage('right')">
+        Next
+      </button>
+    </div>
+  </div>
+</section>
+<section class="py-10 playervaluations" *ngIf="playerValuations.length">
+  <div class="container mx-auto">
+    <h2 class="text-gray-800 text-2xl font-bold mb-8 text-center">Évaluations du Joueur</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div *ngFor="let valuation of playerValuations" class="bg-white rounded-lg shadow-lg p-5 border valuation">
+        <!-- Club et Date -->
+        <div class="flex items-center justify-between">
+          <a (click)="navigateToClub(valuation.currentClub.clubId)"
+             class="text-blue-600 hover:underline text-lg font-semibold">
+            {{ valuation.currentClub.name }}
+          </a>
+          <span class="text-sm text-gray-600">{{ valuation.date | date:'dd/MM/yyyy' }}</span>
+        </div>
+
+        <!-- Valeur du marché -->
+        <div class="mt-3 text-center">
+          <p class="text-gray-700 text-lg font-semibold">Valeur Marché</p>
+          <p class="text-green-600 text-2xl font-bold">{{ valuation.marketValueInEur | currency:'EUR' }}</p>
+        </div>
+
+        <!-- Compétition -->
+        <div class="mt-3">
+          <p class="text-gray-700 text-sm"><strong>Compétition :</strong>
+            <a (click)="navigateToCompetition(valuation.competition.competitionId)"
+               class="text-blue-600 hover:underline">
+              {{ valuation.competition.name }}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Pagination Controls -->
+    <div class="flex justify-center items-center mt-6 space-x-4">
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+              [disabled]="pageP === 1"
+              (click)="changePageP('left')">
+        Previous
+      </button>
+      <span class="text-lg font-semibold">{{ pageP }} / {{ totalpageP }}</span>
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+              [disabled]="pageP >= totalpageP"
+              (click)="changePageP('right')">
+        Next
+      </button>
     </div>
   </div>
 </section>

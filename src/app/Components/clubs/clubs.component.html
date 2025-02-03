@@ -1,67 +1,78 @@
 <app-header></app-header>
+
 <section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero" id="hero">
   <div class="absolute inset-0 bg-black bg-opacity-50">
     <div class="container mx-auto h-full flex flex-col justify-center text-white px-10 py-10 md:py-0">
-      <div class="flex mb-6">
+
+      <!-- Search Bar -->
+      <div class="flex flex-wrap items-center bg-white p-4 rounded-lg shadow-md mb-6 space-x-4 club">
         <input
           type="text"
-          class="p-3 flex-grow rounded text-black mr-4"
+          class="p-3 flex-grow rounded border border-gray-300 text-black"
           [(ngModel)]="searchKeyword"
           placeholder="Search clubs..."
         />
         <button
-          class="bg-gray-800 text-white px-10 py-2 rounded ml-4"
+          class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
           (click)="searchClubs()"
         >
           Search
         </button>
       </div>
 
-      <div *ngIf="clubs.length > 0; else noResults">
-        <div *ngFor="let club of clubs" class="p-3 bg-blue-50 text-black mb-3 rounded">
-          <div class="flex items-center space-x-4">
+      <!-- Club List -->
+      <div *ngIf="clubs.length > 0; else noResults" class="grid md:grid-cols-2 lg:grid-cols-2 gap-4">
+        <div *ngFor="let club of clubs" class="bg-white text-black rounded-lg shadow-lg p-1 club">
+          <div class="flex items-center space-x-3">
+
+            <!-- Club Image -->
             <a (click)="navigateToClub(club.clubId)">
-            <img
-              [attr.src]="'https://tmssl.akamaized.net//images/wappen/head/' + club.url.split('/').pop() + '.png'"
-              alt="Club Image"
-              class="w-12 h-12 rounded-full"
-            />
+              <img
+                [attr.src]="'https://tmssl.akamaized.net//images/wappen/head/' + club.url.split('/').pop() + '.png'"
+                alt="Club Image"
+                class="w-16 h-16 rounded-full border border-gray-300 shadow-md"
+              />
             </a>
-            <div>
-              <h3 class="text-xl font-bold">{{ club.name }}</h3>
+
+            <!-- Club Details -->
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-gray-900">{{ club.name }}</h3>
               <p class="text-sm text-gray-600">
-                Code : {{ club.clubCode }}   |   Coach : {{ club.coachName }}   |    Average Age :  {{club.averageAge}}   |    Number Foreigners : {{club.foreignersNumber}}   |    Percentage Foreigners : {{club.foreignersPercentage}}
+                <strong>Average Age:</strong> {{ club.averageAge }}<br>
+                <strong *ngIf="club.foreignersNumber && club.foreignersPercentage" >Foreigners:</strong> {{ club.foreignersNumber }} ({{ club.foreignersPercentage }}%)
               </p>
-              <p class="text-sm text-gray-600">
-                Stadium : {{ club.stadiumName }}   |  Stadium Seats : {{club.stadiumSeats}}   |  Market Value :  €{{ club.totalMarketValue }}    |    National Team Players : {{club.nationalTeamPlayers}}
+              <p class="text-sm text-gray-600 mt-2">
+                <strong *ngIf="club.stadiumSeats">Stadium:</strong> {{ club.stadiumName }} ({{ club.stadiumSeats }} seats)<br *ngIf="club.stadiumName">
+                <strong *ngIf="club.totalMarketValue">Market Value:</strong> <span class="text-green-600 font-bold" *ngIf="club.totalMarketValue">€{{ club.totalMarketValue }}</span><br *ngIf="club.totalMarketValue">
+                <strong>National Team Players:</strong> {{ club.nationalTeamPlayers }}
               </p>
             </div>
           </div>
         </div>
-
-        <!-- Pagination Controls -->
-        <div class="flex justify-center items-center mt-4">
-          <button
-            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page === 1"
-            (click)="changePage('left')"
-          >
-            Previous
-          </button>
-          <span class="w-1/8"> {{this.page}} / {{this.totalpage}}</span>
-          <button
-            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page >= totalpage"
-            (click)="changePage('right')"
-          >
-            Next
-          </button>
-        </div>
       </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center mt-6 space-x-4">
+        <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+                [disabled]="page === 1"
+                (click)="changePage('left')">
+          Previous
+        </button>
+        <span class="text-lg font-semibold">{{ page }} / {{ totalpage }}</span>
+        <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+                [disabled]="page >= totalpage"
+                (click)="changePage('right')">
+          Next
+        </button>
+      </div>
+
+      <!-- No Results Template -->
       <ng-template #noResults>
-        <p class="text-center text-lg">No Competitions found.</p>
+        <p class="text-center text-lg text-white">No clubs found.</p>
       </ng-template>
+
     </div>
   </div>
 </section>
+
 <app-footer></app-footer>

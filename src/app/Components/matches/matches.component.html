@@ -1,70 +1,69 @@
 <app-header></app-header>
-<section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero" id="hero">
-  <div class="absolute inset-0 bg-black bg-opacity-50">
-    <div class="container mx-auto h-full flex flex-col justify-center text-white px-10 py-10 md:py-0">
-      <div class="flex mb-6">
+<section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero flex items-center justify-center" id="hero">
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="container mx-auto flex flex-col justify-center text-white px-6 py-10 md:py-0 w-full max-w-4xl">
+
+      <div class="flex flex-wrap items-center match p-2 rounded-lg shadow-md mb-6">
         <input
           type="text"
-          class="p-3 flex-grow rounded text-black mr-4"
+          class="p-3 flex-grow rounded border border-gray-300 text-black mr-4 "
           [(ngModel)]="searchKeyword"
           placeholder="Search matches..."
         />
-        <select
-          [(ngModel)]="searchCriteria"
-          class="p-3 rounded text-black mr-4"
-        >
+        <select [(ngModel)]="searchCriteria" class="p-3 rounded border border-gray-300 text-black mr-4">
           <option value="Club">Club</option>
           <option value="Manager">Manager</option>
           <option value="Stadium">Stadium</option>
           <option value="Competition">Competition</option>
         </select>
-        <button
-          class="bg-gray-800 text-white px-10 py-2 rounded ml-4"
-          (click)="searchGames()"
-        >
+        <button class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition" (click)="searchGames()">
           Search
         </button>
       </div>
 
       <div *ngIf="games.length > 0; else noResults">
-        <div *ngFor="let game of games" class="p-2 bg-blue-50 text-black mb-2 rounded">
-          <div class="flex items-center space-x-4">
-            <img
-              src="assets/match.jpg"
-              alt="Match Image"
-              class="w-16 h-16 rounded-full"
-            />
-            <div>
-              <h3 class="text-xl font-bold">{{game.homeClub.name }}  {{game.homeClubGoals}} - {{game.awayClubGoals}} {{game.awayClub.name}}</h3>
-              <p class="text-gray-600">
-                Attendance : {{ game.attendance }}   |   Season :  {{ game.season }}   |    Competition :  {{game.competition.name}}
-              </p >
-              <p class="text-sm">Managers  :  {{ game.homeClubManagerName}} Vs {{game.awayClubManagerName}}   |    Stadium  :  {{game.stadium}}</p>
+
+        <div *ngFor="let game of games" class="p-2 bg-white text-black mb-2 rounded-lg shadow-lg match">
+          <div class="flex items-center space-x-6">
+            <a (click)="navigateToMatche(game.gameId)" class="flex-shrink-0">
+              <img src="assets/football-match.png" alt="Match Image" class="w-20 h-20 rounded-lg shadow-md" />
+            </a>
+            <div class="flex-grow">
+              <div class="flex items-center justify-center space-x-4 text-lg font-semibold">
+                <a (click)="navigateToClub(game.homeClub.clubId)">
+                <img [src]="'https://tmssl.akamaized.net/images/wappen/head/' + game.homeClub.url.split('/').pop() + '.png'"
+                     alt="{{ game.homeClubName }}" class="h-12" /></a>
+                <span>{{ game.homeClubGoals }} - {{ game.awayClubGoals }}</span>
+                <a (click)="navigateToClub(game.awayClub.clubId)">
+                <img [src]="'https://tmssl.akamaized.net/images/wappen/head/' + game.awayClub.url.split('/').pop() + '.png'"
+                     alt="{{ game.awayClubName }}" class="h-12" /></a>
+              </div>
+              <div class="text-center mt-1 p-1 rounded-lg shadow-sm match">
+                <p class="text-gray-700 text-sm font-medium">
+                  <span class="text-gray-900">Attendance:</span> {{ game.attendance }} &bull;
+                  <span class="text-gray-900">Season:</span> {{ game.season }} &bull;
+                  <a (click)="navigateToCompetition(game.competition.competitionId)">
+                  <span class="text-gray-900" >Competition:</span> {{ game.competition.name }}
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Pagination Controls -->
-        <div class="flex justify-center items-center mt-4">
-          <button
-            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page === 1"
-            (click)="changePage('left')"
-          >
+
+        <div class="flex justify-center items-center mt-6 space-x-4">
+          <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="page === 1" (click)="changePage('left')">
             Previous
           </button>
-          <span class="w-1/8"> {{this.page}} /{{this.totalpage}} </span>
-          <button
-            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page >= totalpage"
-            (click)="changePage('right')"
-          >
+          <span class="text-lg font-semibold">{{ page }} / {{ totalpage }}</span>
+          <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="page >= totalpage" (click)="changePage('right')">
             Next
           </button>
         </div>
       </div>
 
       <ng-template #noResults>
-        <p class="text-center text-lg">No players found.</p>
+        <p class="text-center text-lg text-gray-200">No matches found.</p>
       </ng-template>
     </div>
   </div>

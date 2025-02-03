@@ -32,24 +32,28 @@
   <h2 class="text-gray-800 text-2xl font-bold mb-8">Clubs</h2>
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <div *ngFor="let club of clubs" class="bg-white rounded-lg shadow-lg p-3">
+      <a (click)="navigateToClub(club.clubId)">
       <img [attr.src]="'https://tmssl.akamaized.net//images/wappen/head/' + club.url.split('/').pop() + '.png'" class="w-full h-40 object-cover rounded-md" alt="logo du club">
+      </a>
       <h3 class="text-xl font-semibold mt-2">{{ club.name }}</h3>
       <p class="text-gray-600">Stadium: {{ club.stadiumName }}</p>
       <p class="text-gray-600" *ngIf="club.totalMarketValue">Valeur: {{ club.totalMarketValue}}</p>
     </div>
   </div>
-
-  <!-- Pagination -->
-  <div class="flex justify-between mt-6">
-    <button (click)="changePage('left')" [disabled]="page <= 1" class="px-4 py-2 bg-gray-800 text-white rounded">
-      Précédent
-    </button>
-    <span>Page {{ page }} / {{ totalpage }}</span>
-    <button (click)="changePage('right')" [disabled]="page >= totalpage"
-            class="px-4 py-2 bg-gray-800 text-white rounded">
-      Suivant
-    </button>
-  </div>
+    <!-- Pagination Controls -->
+    <div class="flex justify-center items-center mt-6 space-x-4">
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+              [disabled]="page === 1"
+              (click)="changePage('left')">
+        Previous
+      </button>
+      <span class="text-lg font-semibold">{{ page }} / {{ totalpage }}</span>
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+              [disabled]="page >= totalpage"
+              (click)="changePage('right')">
+        Next
+      </button>
+    </div>
   </div>
 </section>
 <app-footer></app-footer>

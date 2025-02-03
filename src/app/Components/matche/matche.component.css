@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+}
+
+.container {
+  max-width: 850px;
+  margin: 1rem auto;
+  padding: 0 0.5rem;
+}
+
+.hero {
+  background-image: url("/assets/bg_1.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.match{
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(31, 41, 55, 0.4);
+}
+.element_club_game
+{
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(31, 41, 55, 0.4);
+}
+.club_games{
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(31, 41, 55, 0.4);
+  background-image: url('/assets/dd1.jpeg');
+}
+.game_events{
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(31, 41, 55, 0.4);
+  background-image: url('/assets/bg_3.jpg');
+}
+
+
+
+

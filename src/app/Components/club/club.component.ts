@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ClubsService} from '../../Services/clubs.service';
 import {FooterComponent} from '../footer/footer.component';
 import {HeaderComponent} from '../header/header.component';
-import {ActivatedRoute, Route} from '@angular/router';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 import {ClubDTO} from '../../Models/ClubDTO';
 import {CurrencyPipe, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {PlayerService} from '../../Services/player.service';
@@ -28,7 +28,7 @@ export class ClubComponent implements OnInit {
   clubId:number=0;
 
 
-  constructor(private route: ActivatedRoute, private clubService: ClubsService,private playerService :PlayerService) {}
+  constructor(private route: ActivatedRoute,private router:Router, private clubService: ClubsService,private playerService :PlayerService) {}
 
   ngOnInit(): void {
     this.clubId = Number(this.route.snapshot.paramMap.get('id'));
@@ -60,6 +60,12 @@ export class ClubComponent implements OnInit {
       this.page = this.page + 1;
     }
     this.getListPlayersByCurrentClub(this.clubId,this.page-1);
+  }
+  navigateToCompetition(id_competition: string) {
+    this.router.navigate(['/competitions/', id_competition]);
+  }
+  navigateToPlayer(id_player: number) {
+    this.router.navigate(['/players/', id_player]);
   }
 
 }

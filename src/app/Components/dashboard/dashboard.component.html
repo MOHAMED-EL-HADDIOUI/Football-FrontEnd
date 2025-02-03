@@ -1,0 +1,57 @@
+<app-header></app-header>
+
+<section id="hero" class="relative min-h-[300px] md:h-screen bg-cover bg-center hero">
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center">
+    <div class="container mx-auto text-white px-4 py-16 md:py-0 text-center md:text-left">
+      <h1 class="text-3xl font-bold">Gestion des données</h1>
+    </div>
+    <div class="container mx-auto py-8">
+      <input
+        type="text"
+        class="border rounded px-4 py-2 w-full md:w-1/2"
+        placeholder="Rechercher un joueur ou un club..."
+      />
+
+      <table class="table-auto w-full border mt-4">
+        <thead>
+        <tr class="bg-gray-200">
+          <th class="border px-4 py-2">Nom</th>
+          <th class="border px-4 py-2">Club</th>
+          <th class="border px-4 py-2">Valeur (€)</th>
+          <th class="border px-4 py-2">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="border px-4 py-2">name</td>
+          <td class="border px-4 py-2">currentClubName</td>
+          <td class="border px-4 py-2">marketValueInEur</td>
+          <td class="border px-4 py-2">
+            <button class="bg-red-500 text-white px-2 py-1 rounded">Supprimer</button>
+          </td>
+        </tr>
+        <tr>
+          <td class="border px-4 py-2">name</td>
+          <td class="border px-4 py-2">currentClubName</td>
+          <td class="border px-4 py-2">marketValueInEur</td>
+          <td class="border px-4 py-2">
+            <button class="bg-red-500 text-white px-2 py-1 rounded">Supprimer</button>
+          </td>
+        </tr>
+        <tr>
+          <td class="border px-4 py-2">name</td>
+          <td class="border px-4 py-2">currentClubName</td>
+          <td class="border px-4 py-2">marketValueInEur</td>
+          <td class="border px-4 py-2">
+            <button class="bg-red-500 text-white px-2 py-1 rounded">Supprimer</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+
+<app-footer></app-footer>

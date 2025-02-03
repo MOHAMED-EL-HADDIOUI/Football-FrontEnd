@@ -8,6 +8,7 @@ import {FooterComponent} from '../footer/footer.component';
 import {FormsModule} from '@angular/forms';
 import {GameDTO} from '../../Models/GameDTO';
 import {MatcheService} from '../../Services/matche.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-matches',
@@ -30,7 +31,7 @@ export class MatchesComponent implements OnInit {
   searchCriteria = 'Club'; // Par défaut, critère de recherche = 'name'
   totalpage: number = 0;
 
-  constructor(private matcheService: MatcheService) {
+  constructor(private matcheService: MatcheService,private router:Router) {
   }
 
   ngOnInit(): void {
@@ -61,5 +62,14 @@ export class MatchesComponent implements OnInit {
       this.page = this.page + 1;
     }
     this.loadGames();
+  }
+  navigateToMatche(id_matche: number) {
+    this.router.navigate(['/matches/', id_matche]);
+  }
+  navigateToCompetition(id_competition: string) {
+    this.router.navigate(['/competitions/', id_competition]);
+  }
+  navigateToClub(id_club: number) {
+    this.router.navigate(['/clubs/', id_club]);
   }
 }

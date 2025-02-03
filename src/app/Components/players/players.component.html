@@ -1,75 +1,79 @@
 <app-header></app-header>
+
 <section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero" id="hero">
   <div class="absolute inset-0 bg-black bg-opacity-50">
     <div class="container mx-auto h-full flex flex-col justify-center text-white px-10 py-10 md:py-0">
-      <div class="flex mb-6">
+
+      <!-- Search Bar -->
+      <div class="flex flex-wrap items-center bg-white p-4 rounded-lg shadow-md mb-6 space-x-4 player">
         <input
           type="text"
-          class="p-3 flex-grow rounded text-black mr-4"
+          class="p-3 flex-grow rounded border border-gray-300 text-black"
           [(ngModel)]="searchKeyword"
           placeholder="Search players..."
         />
-        <select
-          [(ngModel)]="searchCriteria"
-          class="p-3 rounded text-black mr-4"
-        >
+        <select [(ngModel)]="searchCriteria" class="p-3 rounded border border-gray-300 text-black">
           <option value="name">Name</option>
           <option value="position">Position</option>
           <option value="currentclub">Current Club</option>
           <option value="competition">Competition</option>
         </select>
-        <button
-          class="bg-gray-800 text-white px-10 py-2 rounded ml-4"
-          (click)="searchPlayers()"
-        >
+        <button class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
+                (click)="searchPlayers()">
           Search
         </button>
       </div>
 
-      <div *ngIf="players.length > 0; else noResults">
-        <div *ngFor="let player of players" class="p-3 bg-blue-50 text-black mb-3 rounded">
+      <!-- Player List -->
+      <div *ngIf="players.length > 0; else noResults" class="grid md:grid-cols-2 lg:grid-cols-2 gap-4 ">
+        <div *ngFor="let player of players" class="bg-white text-black rounded-lg shadow-lg p-4 player">
           <div class="flex items-center space-x-4">
+
+            <!-- Player Image -->
             <a (click)="navigateToPlayer(player.playerId)">
-            <img
-              [src]="player.imageUrl || 'default-player.png'"
-              alt="Player Image"
-              class="w-12 h-12 rounded-full"
-            />
+              <img [src]="player.imageUrl || 'default-player.png'"
+                   alt="Player Image"
+                   class="w-16 h-16 rounded-full border border-gray-300 shadow-md">
             </a>
-            <div>
-              <h3 class="text-xl font-bold">{{ player.name }}</h3>
+
+            <!-- Player Details -->
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-gray-900">{{ player.name }}</h3>
               <p class="text-sm text-gray-600">
-                Club : {{ player.currentClub.name }}   |   Position : {{ player.position }}   |    Competition :  {{player.competition.name}}
+                <strong>Club:</strong> {{ player.currentClub.name }}<br>
+                <strong>Position:</strong> {{ player.position }}<br>
+                <strong>Competition:</strong> {{ player.competition.name }}
               </p>
-              <p>Market Value: €{{ player.marketValueInEur | number }}</p>
+              <p class="text-sm font-semibold text-gray-800">
+                Market Value: <span class="text-green-600 font-bold">€{{ player.marketValueInEur | number }}</span>
+              </p>
             </div>
           </div>
         </div>
-
-        <!-- Pagination Controls -->
-        <div class="flex justify-center items-center mt-4">
-          <button
-            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page === 1"
-           (click)="changePage('left')"
-          >
-            Previous
-          </button>
-          <span class="w-1/8"> {{this.page}} / {{this.totalpage}}</span>
-          <button
-            class="px-4 py-2 mx-2 bg-gray-800 text-white rounded w-1/6"
-            [disabled]="page >= totalpage"
-            (click)="changePage('right')"
-          >
-            Next
-          </button>
-        </div>
       </div>
 
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center mt-6 space-x-4">
+        <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+                [disabled]="page === 1"
+                (click)="changePage('left')">
+          Previous
+        </button>
+        <span class="text-lg font-semibold">{{ page }} / {{ totalpage }}</span>
+        <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+                [disabled]="page >= totalpage"
+                (click)="changePage('right')">
+          Next
+        </button>
+      </div>
+
+      <!-- No Results Template -->
       <ng-template #noResults>
-        <p class="text-center text-lg">No players found.</p>
+        <p class="text-center text-lg text-white">No players found.</p>
       </ng-template>
+
     </div>
   </div>
 </section>
+
 <app-footer></app-footer>

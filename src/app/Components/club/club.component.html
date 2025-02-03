@@ -17,8 +17,9 @@
           <p *ngIf="club.clubCode"><strong>Code :</strong> {{ club.clubCode }}</p>
           <p *ngIf="club.coachName"><strong>Coach :</strong> {{ club.coachName }}</p>
           <p *ngIf="club.averageAge"><strong>Average Age :</strong> {{ club.averageAge }}</p>
+          <a (click)="navigateToCompetition(club.domesticCompetition.competitionId)">
           <p *ngIf="club.domesticCompetition?.name"><strong>Competition :</strong> {{ club.domesticCompetition.name }}
-          </p>
+          </p></a>
         </div>
 
         <div>
@@ -46,25 +47,30 @@
   <div class="container mx-auto ">
   <h2 class="text-gray-800 text-2xl font-bold mb-8">Joueurs</h2>
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <div *ngFor="let player of players" class="bg-white rounded-lg shadow-lg p-3 bg-gray-300">
+    <div *ngFor="let player of players" class="bg-white rounded-lg shadow-lg p-3 bg-gray-300 joueur">
+      <a (click)="navigateToPlayer(player.playerId)">
       <img [src]="player.imageUrl" class="w-full h-40 object-cover rounded-md" alt="Photo du joueur">
+      </a>
       <h3 class="text-xl font-semibold mt-2">{{ player.name }}</h3>
       <p class="text-gray-600">Position: {{ player.position }}</p>
       <p class="text-gray-600">Valeur: {{ player.marketValueInEur | currency:'EUR' }}</p>
     </div>
   </div>
 
-  <!-- Pagination -->
-  <div class="flex justify-between mt-6">
-    <button (click)="changePage('left')" [disabled]="page <= 1" class="px-4 py-2 bg-gray-800 text-white rounded">
-      Précédent
-    </button>
-    <span>Page {{ page }} / {{ totalpage }}</span>
-    <button (click)="changePage('right')" [disabled]="page >= totalpage"
-            class="px-4 py-2 bg-gray-800 text-white rounded">
-      Suivant
-    </button>
-  </div>
+    <!-- Pagination Controls -->
+    <div class="flex justify-center items-center mt-6 space-x-4">
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+              [disabled]="page === 1"
+              (click)="changePage('left')">
+        Previous
+      </button>
+      <span class="text-lg font-semibold">{{ page }} / {{ totalpage }}</span>
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+              [disabled]="page >= totalpage"
+              (click)="changePage('right')">
+        Next
+      </button>
+    </div>
   </div>
 </section>
 <app-footer></app-footer>

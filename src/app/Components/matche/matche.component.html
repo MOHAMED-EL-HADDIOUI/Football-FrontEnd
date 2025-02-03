@@ -1,0 +1,248 @@
+<app-header></app-header>
+<section class="relative min-h-[400px] md:h-screen bg-cover bg-center hero" id="hero">
+  <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center">
+    <div class="container mx-auto text-white px-6 py-12 md:py-0">
+      <div *ngIf="game" class="bg-white text-white rounded-lg shadow-lg p-6 match">
+        <!-- Détails du match -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+          <!-- Équipe à domicile -->
+          <div class="text-center">
+            <a (click)="navigateToClub(game.homeClub.clubId)">
+              <img
+                [attr.src]="'https://tmssl.akamaized.net//images/wappen/head/' + game.homeClub.url.split('/').pop() + '.png'"
+                alt="{{ game.homeClubName }}" class="h-18 mx-auto">
+              <h2 class="font-semibold">{{ game.homeClubName }}</h2>
+            </a>
+            <p class="p-2">Manager : {{ game.homeClubManagerName }}</p>
+          </div>
+
+          <!-- Score -->
+          <div class="text-center">
+            <span class="text-3xl font-bold">{{ game.homeClubGoals }} - {{ game.awayClubGoals }}</span>
+            <p>{{ game.date | date:'fullDate' }}</p>
+          </div>
+
+          <!-- Équipe à l'extérieur -->
+          <div class="text-center">
+            <a (click)="navigateToClub(game.awayClub.clubId)">
+              <img
+                [attr.src]="'https://tmssl.akamaized.net//images/wappen/head/' + game.awayClub.url.split('/').pop() + '.png'"
+                alt="{{ game.awayClubName }}" class="h-18 mx-auto">
+              <h2 class="font-semibold">{{ game.awayClubName }}</h2>
+            </a>
+            <p class="p-2">Manager : {{ game.awayClubManagerName }}</p>
+          </div>
+        </div>
+
+        <!-- Infos supplémentaires -->
+        <div class="mt-6 text-center">
+          <p class="font-bold text-white" *ngIf="game.season"><strong class="font-bold text-black">Season
+            :</strong> {{ game.season }}</p>
+          <p class="font-bold text-white" *ngIf="game.stadium"><strong class="font-bold text-black">Stade
+            :</strong> {{ game.stadium }}</p>
+          <p class="font-bold text-white" *ngIf="game.referee"><strong class="font-bold text-black">Arbitre
+            :</strong> {{ game.referee }}</p>
+          <p class="font-bold text-white" *ngIf="game.attendance"><strong class="font-bold text-black">Affluence
+            :</strong> {{ game.attendance | number }} spectateurs</p>
+        </div>
+
+        <!-- Bouton vers la compétition -->
+        <div class="mt-6 text-center">
+          <button (click)="navigateToCompetition(game.competition.competitionId)"
+                  class="px-4 py-2 bg-gray-800 text-white rounded-lg shadow">
+            Voir la compétition
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="py-10 club_games" *ngIf="clubgames.length">
+  <div class="container mx-auto">
+    <h2 class="text-gray-800 text-2xl font-bold mb-6 text-center">Matchs du Club</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6">
+      <div *ngFor="let clubGame of clubgames" class="rounded-lg shadow-lg p-5 border border-gray-200 element_club_game">
+
+        <!-- Informations principales du match -->
+        <div class="text-center mb-4">
+          <p class="text-gray-600 text-sm">{{ clubGame.game.competition.name }} - {{ clubGame.game.season }}</p>
+        </div>
+
+        <!-- Bloc score et équipes -->
+        <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
+          <!-- Équipe du club -->
+          <div class="text-center">
+            <a (click)="navigateToClub(clubGame.club.clubId)" class="text-blue-600 hover:underline">
+              <img
+                [src]="'https://tmssl.akamaized.net//images/wappen/head/' + clubGame.club.url.split('/').pop() + '.png'"
+                alt="{{ clubGame.club.name }}" class="h-12 mx-auto">
+            </a>
+            <p class="text-sm text-gray-600" *ngIf="clubGame.ownManagerName">{{ clubGame.ownManagerName }}</p>
+          </div>
+
+          <!-- Score -->
+          <div class="text-center">
+            <span class="text-3xl font-bold"
+                  [ngClass]="{'text-green-600': clubGame.isWin === 1, 'text-red-600': clubGame.isWin === 0}">
+              {{ clubGame.ownGoals }} - {{ clubGame.opponentGoals }}
+            </span>
+            <p class="text-gray-600 text-sm">{{ clubGame.game.date | date:'dd/MM/yyyy' }}</p>
+          </div>
+
+          <!-- Équipe adverse -->
+          <div class="text-center">
+            <a (click)="navigateToClub(clubGame.opponentclub.clubId)" class="text-red-600 hover:underline">
+              <img
+                [src]="'https://tmssl.akamaized.net//images/wappen/head/' + clubGame.opponentclub.url.split('/').pop() + '.png'"
+                alt="{{ clubGame.opponentclub.name }}" class="h-12 mx-auto">
+            </a>
+            <p class="text-sm text-gray-600" *ngIf="clubGame.opponentManagerName">{{ clubGame.opponentManagerName }}</p>
+          </div>
+        </div>
+
+        <!-- Infos supplémentaires -->
+        <div class="mt-4 p-3 rounded-lg text-center">
+          <p class="text-gray-700" *ngIf="clubGame.ownPosition"><strong>Position du club
+            :</strong> {{ clubGame.ownPosition }}</p>
+          <p class="text-gray-700" *ngIf=" clubGame.opponentPosition"><strong>Position de l'adversaire
+            :</strong> {{ clubGame.opponentPosition }}</p>
+          <p class="text-gray-700" *ngIf="clubGame.hosting"><strong>Lieu
+            :</strong> {{ clubGame.hosting === 'home' ? 'Domicile' : 'Extérieur' }}</p>
+        </div>
+
+        <!-- Lien vers la compétition -->
+        <div class="mt-4 text-center">
+          <button (click)="navigateToCompetition(clubGame.game.competition.competitionId)"
+                  class="px-4 py-2 bg-gray-800 text-white rounded-lg shadow">
+            Voir la compétition
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="py-10 game_events" *ngIf="gameEvents.length">
+  <div class="container mx-auto">
+    <h2 class="text-gray-800 text-2xl font-bold mb-8 text-center">Événements du Match</h2>
+
+    <div class="bg-white rounded-lg shadow-lg p-5 border border-gray-200">
+      <ul class="divide-y divide-gray-300">
+        <li *ngFor="let event of gameEvents" class="py-4 flex items-center">
+
+          <!-- Minute du match -->
+          <div class="w-12 text-center font-bold text-gray-800">
+            {{ event.minute }}'
+          </div>
+
+          <!-- Icône de l'événement -->
+          <div class="w-10 flex justify-center">
+            <ng-container [ngSwitch]="event.type">
+              <img *ngSwitchCase="'Goals'" src="/assets/goal.png" alt="But" class="h-6">
+              <img *ngSwitchCase="'Cards'" src="/assets/card.png" alt="Carton jaune" class="h-6">
+              <img *ngSwitchCase="'Substitutions'" src="assets/Substitutions.png" alt="Remplacement" class="h-6">
+            </ng-container>
+          </div>
+
+          <!-- Détails de l'événement -->
+          <div class="flex-1 pl-4">
+            <p class="text-gray-700">
+              <strong>
+                <a (click)="navigateToPlayer(event.player.playerId)" class="text-blue-600 hover:underline">
+                  {{ event.player.name }}
+                </a>
+              </strong>
+              <span *ngIf="event.type === 'Substitutions'">a été remplacé par
+                <a class="text-green-600 hover:underline">
+                  {{ event.playerIn?.name }}
+                </a> 🔄
+              </span>
+              <span *ngIf="event.type === 'assist'">a réalisé une passe décisive 🎯</span>
+              <span *ngIf="event.description">{{ event.description }}</span>
+            </p>
+          </div>
+
+          <!-- Logo du club -->
+          <div class="w-12 text-center">
+            <a (click)="navigateToClub(event.club.clubId)">
+              <img [src]="'https://tmssl.akamaized.net//images/wappen/head/' + event.club.url.split('/').pop() + '.png'"
+                   alt="{{ event.club.name }}" class="h-8 mx-auto">
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- Pagination -->
+    <div class="flex justify-center items-center mt-6 space-x-4">
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="page === 1"
+              (click)="changePage('left')">
+        Previous
+      </button>
+      <span class="text-lg font-semibold">{{ page }} / {{ totalpage }}</span>
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="page >= totalpage"
+              (click)="changePage('right')">
+        Next
+      </button>
+    </div>
+  </div>
+</section>
+<section class="py-10 game_lineups" *ngIf="gameLineups.length">
+  <div class="container mx-auto">
+    <h2 class="text-gray-800 text-2xl font-bold mb-8 text-center">Alignements des Équipes</h2>
+
+    <!-- Tableau des alignements -->
+    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+      <!-- Liste des alignements (non divisée) -->
+      <div class="mb-8">
+        <ul class="space-y-4">
+          <li *ngFor="let lineup of gameLineups" class="flex items-center justify-between border-b py-3">
+            <span *ngIf="lineup.type" class="text-yellow-600 font-bold">
+              <img class="w-12 h-12 rounded-full" [src]="lineup.player.imageUrl || 'default-player.png'"
+                   [alt]="lineup.playerName"
+                   [ngClass]="{'border-green-500': lineup.type === 'starting_lineup', 'border-red-500': lineup.type === 'substitutes'}"
+                   style="border-width: 5px; border-style: solid;">
+            </span>
+            <span *ngIf="lineup.teamCaptain" class="text-yellow-600 font-bold">
+              <img src="/assets/teamCaptain.webp" class="w-10 h-10 rounded-full">
+            </span>
+
+            <!-- Nom du joueur et détails -->
+            <div class="flex-1 pl-4">
+              <p class="text-gray-700 font-medium">
+                <strong>{{ lineup.playerName }}</strong> -
+                <span class="italic text-gray-500">{{ lineup.position }}</span>
+                (#{{ lineup.number }})
+              </p>
+            </div>
+            <!-- Club -->
+            <div class="text-sm text-gray-600">
+              <span *ngIf="lineup.club.clubId === game.homeClub.clubId" (click)="navigateToClub(game.homeClub.clubId)">
+                <img
+                  [src]="'https://tmssl.akamaized.net//images/wappen/head/' + game.homeClub.url.split('/').pop() + '.png'"
+                  alt="{{ game.homeClubName }}" class="h-12 mx-auto">
+              </span>
+              <span *ngIf="lineup.club.clubId === game.awayClub.clubId" (click)="navigateToClub(game.awayClub.clubId)">
+                <img
+                  [src]="'https://tmssl.akamaized.net//images/wappen/head/' + game.awayClub.url.split('/').pop() + '.png'"
+                  alt="{{ game.awayClubName }}" class="h-12 mx-auto">
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center mt-6 space-x-4">
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="pagel === 1" (click)="changePagel('left')">
+        Previous
+      </button>
+      <span class="text-lg font-semibold">{{ pagel }} / {{ totalpagel }}</span>
+      <button class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50" [disabled]="pagel >= totalpagel" (click)="changePagel('right')">
+        Next
+      </button>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>
+

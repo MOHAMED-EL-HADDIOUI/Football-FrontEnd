@@ -60,7 +60,6 @@ export class ClubsComponent implements OnInit {
     this.loadClubs();
   }
   navigateToClub(id_club: number) {
-    console.log("clique")
     this.router.navigate(['/clubs/', id_club]);
   }
 }

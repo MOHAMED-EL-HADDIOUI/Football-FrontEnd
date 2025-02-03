@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.contact-hero {
+  background-size: cover;
+  background-position: center;
+  background-image: url("/assets/bg_1.jpg");
+}
+.contact {
+  background-size: cover;
+  background-position: center;
+  background-image: url("/assets/dd1.jpeg");
+}
+

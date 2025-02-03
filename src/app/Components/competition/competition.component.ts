@@ -4,7 +4,7 @@ import {FooterComponent} from '../footer/footer.component';
 import {HeaderComponent} from '../header/header.component';
 import {ClubDTO} from '../../Models/ClubDTO';
 import {PlayerDTO} from '../../Models/PlayerDTO';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ClubsService} from '../../Services/clubs.service';
 import {PlayerService} from '../../Services/player.service';
 import {CompetitionDTO} from '../../Models/CompetitionDTO';
@@ -31,7 +31,7 @@ export class CompetitionComponent implements  OnInit {
   competitionId:string="";
 
 
-  constructor(private route: ActivatedRoute, private competitionsService: CompetitionsService, private clubsService:ClubsService) {}
+  constructor(private route: ActivatedRoute,private router:Router,private competitionsService: CompetitionsService, private clubsService:ClubsService) {}
 
   ngOnInit(): void {
     this.competitionId = String(this.route.snapshot.paramMap.get('id'));
@@ -63,6 +63,9 @@ export class CompetitionComponent implements  OnInit {
       this.page = this.page + 1;
     }
     this.getListClubsByCompetition(this.competitionId,this.page-1);
+  }
+  navigateToClub(id_club: number) {
+    this.router.navigate(['/clubs/', id_club]);
   }
 
 }
