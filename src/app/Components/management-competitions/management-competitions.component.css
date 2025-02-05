@@ -18,3 +18,9 @@ body {
   background-position: center;
   background-image: url("/assets/bg_3.jpg");
 }
+.ModalOpen{
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(31, 41, 55, 0.4);
+  background-image: url('/assets/dd1.jpeg');
+}

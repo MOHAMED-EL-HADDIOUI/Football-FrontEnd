@@ -8,6 +8,7 @@ import {PlayerService} from '../../Services/player.service';
 import {HttpClientModule} from '@angular/common/http';
 import {PlayersDTO} from '../../Models/PlayersDTO';
 import {Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-players',
@@ -25,13 +26,19 @@ import {Router} from '@angular/router';
   styleUrl: './players.component.css'
 })
 export class PlayersComponent implements OnInit {
+  title = 'Players';
   players: PlayerDTO[] = [];
   searchKeyword = '';
   page = 1;
   searchCriteria = 'name'; // Par défaut, critère de recherche = 'name'
   totalpage: number = 0;
 
-  constructor(private playerService: PlayerService,private router: Router) {
+  constructor(private playerService: PlayerService,private router: Router,private titleService: Title) {
+    this.setTitle(this.title);
+
+  }
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
   }
 
   ngOnInit(): void {

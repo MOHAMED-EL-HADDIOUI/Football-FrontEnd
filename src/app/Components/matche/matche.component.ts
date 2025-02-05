@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
-  CurrencyPipe,
   DatePipe,
   DecimalPipe,
   NgClass,
@@ -9,7 +8,6 @@ import {
   NgIf,
   NgSwitch,
   NgSwitchCase,
-  NgSwitchDefault
 } from '@angular/common';
 import {HeaderComponent} from '../header/header.component';
 import {FooterComponent} from '../footer/footer.component';
@@ -21,6 +19,7 @@ import {GameEventDTO} from '../../Models/GameEventDTO';
 import {GameEventsService} from '../../Services/game-events.service';
 import {GameLineupDTO} from '../../Models/GameLineupDTO';
 import {GameLineupsService} from '../../Services/game-lineups.service';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-matche',
@@ -44,7 +43,7 @@ export class MatcheComponent implements OnInit{
   gameEvents:GameEventDTO[]=[];
   gameLineups:GameLineupDTO[]=[];
   clubgames :ClubGameDTO[]=[];
-
+  title = '';
   pagel = 1;
   totalpagel: number = 0;
 
@@ -53,8 +52,10 @@ export class MatcheComponent implements OnInit{
   gameId:number=0;
 
 
-  constructor(private route: ActivatedRoute,private router:Router,private gameLineupsService:GameLineupsService,private gameEventsService:GameEventsService,private clubGamesService:ClubGamesService,private matcheService:MatcheService) {}
-
+  constructor(private route: ActivatedRoute,private router:Router,private gameLineupsService:GameLineupsService,private gameEventsService:GameEventsService,private clubGamesService:ClubGamesService,private matcheService:MatcheService,private titleService: Title) {}
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
+  }
   ngOnInit(): void {
     this.gameId = Number(this.route.snapshot.paramMap.get('id'));
     this.getGame(this.gameId);
@@ -66,6 +67,7 @@ export class MatcheComponent implements OnInit{
   getGame(gameId: number):void{
     this.matcheService.getGameById(gameId).subscribe((data) => {
       this.game = data;
+      this.setTitle(`${this.game.homeClub.clubCode} VS ${this.game.awayClub.clubCode}`);
     });
   }
   getclubgames (gameId: number,page:number):void{

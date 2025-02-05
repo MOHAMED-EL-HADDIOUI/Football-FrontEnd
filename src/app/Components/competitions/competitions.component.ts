@@ -9,6 +9,7 @@ import {CompetitionsService} from '../../Services/competitions.service';
 import {CompetitionsDTO} from '../../Models/CompetitionsDTO';
 import {CompetitionDTO} from '../../Models/CompetitionDTO';
 import {Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-competitions',
@@ -25,14 +26,19 @@ import {Router} from '@angular/router';
   styleUrl: './competitions.component.css'
 })
 export class CompetitionsComponent implements  OnInit {
+  title = 'Competitions';
   competitions: CompetitionDTO[] = [];
   searchKeyword = '';
   page = 1;
   totalpage: number = 0;
 
-  constructor(private competitionsService: CompetitionsService,private router: Router) {
-  }
+  constructor(private competitionsService: CompetitionsService,private router: Router,private titleService: Title) {
+    this.setTitle(this.title);
 
+  }
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
+  }
   ngOnInit(): void {
     this.loadCompetitions();
     console.log(this.competitions)

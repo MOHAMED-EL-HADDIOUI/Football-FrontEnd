@@ -24,4 +24,9 @@ export class ClubsService {
   getListClubsByCompetition(idCompetition: string, page: number): Observable<ClubsDTO> {
     return this.http.get<ClubsDTO>(this.apiUrl+"competition?idCompetition="+idCompetition+"&page="+page);
   }
+
+  addClub(newClub: ClubDTO): Observable<ClubDTO> {
+    return this.http.post<ClubDTO>(this.apiUrl+'/add', newClub);
+  }
+
 }

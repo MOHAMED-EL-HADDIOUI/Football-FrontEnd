@@ -13,6 +13,7 @@ import {discardPeriodicTasks} from '@angular/core/testing';
 import {PlayerValuationsService} from '../../Services/player-valuations.service';
 import {PlayerValuationsDTO} from '../../Models/PlayerValuationsDTO';
 import {PlayerValuationDTO} from '../../Models/PlayerValuationDTO';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-player',
@@ -29,6 +30,7 @@ import {PlayerValuationDTO} from '../../Models/PlayerValuationDTO';
   styleUrl: './player.component.css'
 })
 export class PlayerComponent implements OnInit{
+  title = '';
   player!: PlayerDTO;
   playerValuations:PlayerValuationDTO[]=[];
   pageP = 1;
@@ -38,17 +40,22 @@ export class PlayerComponent implements OnInit{
   transfers: TransferDTO[] = [];
   page = 1;
   totalpage: number = 0;
-  constructor(private route: ActivatedRoute,private playerValuationsService :PlayerValuationsService,private router :Router,private transfersService:TransfersService,private playerService :PlayerService) {}
+  constructor(private route: ActivatedRoute,private playerValuationsService :PlayerValuationsService,private router :Router,private transfersService:TransfersService,private playerService :PlayerService,private titleService: Title) {
+  }
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
+  }
 
   ngOnInit(): void {
     this.playerId = Number(this.route.snapshot.paramMap.get('id'));
-    this.getClub(this.playerId);
+    this.getPlayer(this.playerId);
     this.getTransfers(this.playerId,this.page-1);
     this.getplayerValuations(this.playerId,this.pageP-1);
   }
-  getClub(playerId: number):void{
+  getPlayer(playerId: number):void{
     this.playerService.getPlayerById(playerId).subscribe((data) => {
       this.player = data;
+      this.setTitle(this.player.name);
     });
   }
   getplayerValuations (playerId: number,page:number):void{

@@ -10,6 +10,7 @@ import {PlayerService} from '../../Services/player.service';
 import {CompetitionDTO} from '../../Models/CompetitionDTO';
 import {CompetitionsService} from '../../Services/competitions.service';
 import {ClubsDTO} from '../../Models/ClubsDTO';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-competition',
@@ -24,6 +25,7 @@ import {ClubsDTO} from '../../Models/ClubsDTO';
   styleUrl: './competition.component.css'
 })
 export class CompetitionComponent implements  OnInit {
+  title = '';
   competition!: CompetitionDTO;
   clubs: ClubDTO[] = [];
   page = 1;
@@ -31,17 +33,21 @@ export class CompetitionComponent implements  OnInit {
   competitionId:string="";
 
 
-  constructor(private route: ActivatedRoute,private router:Router,private competitionsService: CompetitionsService, private clubsService:ClubsService) {}
+  constructor(private route: ActivatedRoute,private router:Router,private competitionsService: CompetitionsService, private clubsService:ClubsService,private titleService: Title) {}
 
   ngOnInit(): void {
     this.competitionId = String(this.route.snapshot.paramMap.get('id'));
     this.getCompetition(this.competitionId);
     this.getListClubsByCompetition(this.competitionId,this.page-1);
   }
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
+  }
 
   getCompetition(competitionId: string):void{
     this.competitionsService.getcompetitionById(competitionId).subscribe((data) => {
       this.competition = data;
+      this.setTitle(this.competition.name);
     });
   }
   getListClubsByCompetition(competitionId: string,page :number):void{

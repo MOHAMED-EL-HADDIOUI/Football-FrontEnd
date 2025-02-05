@@ -18,7 +18,7 @@
           🔍 Rechercher
         </button>
         <!-- Bouton pour afficher le formulaire -->
-        <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition ml-2">
+        <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition ml-2" (click)="openModal()">
           ➕ Ajouter
         </button>
       </div>
@@ -29,28 +29,26 @@
           <table class="table-auto w-full border mt-4 bg-white bg-opacity-50 shadow-md rounded-lg max-h-[400px] overflow-y-auto table-fixed">
             <thead>
             <tr class="bg-gray-200 text-gray-700">
-              <th class="border px-4 py-2 w-[120px]">Compétition</th>
-              <th class="border px-4 py-2 w-[150px]">Code</th>
-              <th class="border px-4 py-2 w-[150px]">Type</th>
-              <th class="border px-4 py-2 w-[150px]">Sous-type</th>
-              <th class="border px-4 py-2 w-[150px]">Pays</th>
-              <th class="border px-4 py-2 w-[150px]">Confédération</th>
-              <th class="border px-4 py-2 w-[150px]">Actions</th>
+              <th class="border px-4 py-2 w-[120px] whitespace-pre-line">Compétition</th>
+              <th class="border px-4 py-2 w-[150px] whitespace-pre-line">Code</th>
+              <th class="border px-4 py-2 w-[150px] whitespace-pre-line">Type</th>
+              <th class="border px-4 py-2 w-[150px] whitespace-pre-line">Pays</th>
+              <th class="border px-4 py-2 w-[150px] whitespace-nowrap">Confédération</th>
+              <th class="border px-4 py-2 w-[150px] whitespace-pre-line">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let competition of competitions" class="text-gray-800 hover:bg-gray-100">
-              <td class="border px-4 py-2 font-semibold" (click)="navigateToCompetition(competition.competitionId)">{{ competition.name }}</td>
-              <td class="border px-4 py-2">{{ competition.competitionCode }}</td>
-              <td class="border px-4 py-2">{{ competition.type }}</td>
-              <td class="border px-4 py-2">{{ competition.subType }}</td>
-              <td class="border px-4 py-2">{{ competition.countryName }}</td>
-              <td class="border px-4 py-2">{{ competition.confederation }}</td>
-              <td class="border px-4 py-2 flex justify-center space-x-2">
+              <td class="border px-4 py-2 font-bold w-[120px] whitespace-pre-line" (click)="navigateToCompetition(competition.competitionId)">{{ competition.name }}</td>
+              <td class="border px-4 py-2 w-[120px] whitespace-pre-line">{{ competition.competitionCode }}</td>
+              <td class="border px-4 py-2 w-[180px] whitespace-pre-line">{{ competition.type }}</td>
+              <td class="border px-4 py-2 w-[150px] whitespace-pre-line">{{ competition.countryName }}</td>
+              <td class="border px-4 py-2 w-[150px] whitespace-pre-line">{{ competition.confederation }}</td>
+              <td class="border px-4 py-2 flex justify-center space-x-2 w-[150px] ">
                 <button class="bg-blue-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="navigateToCompetition(competition.competitionId)">
                   🔍
                 </button>
-                <button class="bg-yellow-500 w-1/3 text-white px-3 py-1 rounded flex items-center">
+                <button class="bg-yellow-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="openModal_(competition)">
                   ✏️
                 </button>
                 <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center">
@@ -76,12 +74,198 @@
         </div>
       </div>
 
-      <!-- Message si aucune compétition trouvée -->
       <ng-template #noResults>
         <p class="text-center text-lg text-gray-200 mt-6">Aucune compétition trouvée.</p>
       </ng-template>
     </div>
   </div>
 </section>
+<section class="py-10 ModalOpen" *ngIf="isModalOpen">
+  <div class="container mx-auto opacity-75 m-2 p-2 py-2">
+    <h2 class="text-gray-800 text-2xl font-semibold mb-8 text-center">Ajouter une Compétition</h2>
 
+    <!-- Competition Addition Form -->
+    <form [formGroup]="competitionForm" (ngSubmit)="addCompetition()" class="space-y-6">
+
+      <!-- Competition Information -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div class="mb-4">
+          <label for="competitionCode" class="block text-sm font-medium text-gray-700">Code de la Compétition :</label>
+          <input type="text" id="competitionCode" formControlName="competitionCode"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le code de la compétition"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="name" class="block text-sm font-medium text-gray-700">Nom :</label>
+          <input type="text" id="name" formControlName="name"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le nom de la compétition"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="type" class="block text-sm font-medium text-gray-700">Type :</label>
+          <select id="type" formControlName="type"
+                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <option value="">Sélectionnez un type</option>
+            <option value="International">International</option>
+            <option value="National">National</option>
+            <option value="Régional">Régional</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="subType" class="block text-sm font-medium text-gray-700">Sous-type :</label>
+          <input type="text" id="subType" formControlName="subType"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le sous-type (ex: Coupe, Ligue)"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="confederation" class="block text-sm font-medium text-gray-700">Confédération :</label>
+          <input type="text" id="confederation" formControlName="confederation"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Ex: UEFA, CAF, CONMEBOL"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="countryId" class="block text-sm font-medium text-gray-700">Pays :</label>
+          <select id="countryId" formControlName="countryId"
+                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <option *ngFor="let country of countries" [ngValue]="country.id">{{ country.name }}</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="domesticLeagueCode" class="block text-sm font-medium text-gray-700">Code de la Ligue Nationale :</label>
+          <input type="text" id="domesticLeagueCode" formControlName="domesticLeagueCode"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Ex: L1, EPL, Serie A"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="isMajorNationalLeague" class="block text-sm font-medium text-gray-700">Ligue Nationale Majeure :</label>
+          <select id="isMajorNationalLeague" formControlName="isMajorNationalLeague"
+                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <option [ngValue]="true">Oui</option>
+            <option [ngValue]="false">Non</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="url" class="block text-sm font-medium text-gray-700">URL :</label>
+          <input type="url" id="url" formControlName="url"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Lien vers la compétition"/>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end mt-4 space-x-4">
+        <button type="button" (click)="closeModal()"
+                class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
+        </button>
+        <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
+                [disabled]="competitionForm.invalid">Ajouter
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+<section class="py-10 ModalOpen" *ngIf="isModalOpen_">
+  <div class="container mx-auto opacity-75 m-2 p-2 py-2">
+    <h2 class="text-gray-800 text-2xl font-semibold mb-8 text-center">Modifier une Compétition</h2>
+
+    <!-- Competition Addition Form -->
+    <form [formGroup]="competitionForm" (ngSubmit)="updateCompetition()" class="space-y-6">
+
+      <!-- Competition Information -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div class="mb-4">
+          <label for="competitionCode_" class="block text-sm font-medium text-gray-700">Code de la Compétition :</label>
+          <input type="text" id="competitionCode_"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le code de la compétition" [value]="competitionData.competitionCode"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="name_" class="block text-sm font-medium text-gray-700">Nom :</label>
+          <input type="text" id="name_"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le nom de la compétition" [value]="competitionData.name"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="type_" class="block text-sm font-medium text-gray-700">Type :</label>
+          <select id="type_"  [value]="competitionData.type"
+                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <option value="">Sélectionnez un type</option>
+            <option value="International">International</option>
+            <option value="National">National</option>
+            <option value="Régional">Régional</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="subType_" class="block text-sm font-medium text-gray-700">Sous-type :</label>
+          <input type="text" id="subType_"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le sous-type (ex: Coupe, Ligue)" [value]="competitionData.subType"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="confederation_" class="block text-sm font-medium text-gray-700">Confédération :</label>
+          <input type="text" id="confederation_"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Ex: UEFA, CAF, CONMEBOL" [value]="competitionData.confederation"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="countryId_" class="block text-sm font-medium text-gray-700">Pays :</label>
+          <select id="countryId_"
+                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <option *ngFor="let country of countries" [ngValue]="country.id">{{ country.name }}</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="domesticLeagueCode_" class="block text-sm font-medium text-gray-700">Code de la Ligue Nationale :</label>
+          <input type="text" id="domesticLeagueCode_"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Ex: L1, EPL, Serie A" [value]="competitionData.domesticLeagueCode" />
+        </div>
+
+        <div class="mb-4">
+          <label for="isMajorNationalLeague_" class="block text-sm font-medium text-gray-700">Ligue Nationale Majeure :</label>
+          <select id="isMajorNationalLeague_"  [value]="competitionData.isMajorNationalLeague"
+                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <option [ngValue]="true">Oui</option>
+            <option [ngValue]="false">Non</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="url" class="block text-sm font-medium text-gray-700">URL :</label>
+          <input type="url" id="url_"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Lien vers la compétition" [value]="competitionData.url"/>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end mt-4 space-x-4">
+        <button type="button" (click)="closeModal_()"
+                class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
+        </button>
+        <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
+                [disabled]="competitionForm.invalid">Modifier
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
 <app-footer></app-footer>

@@ -6,6 +6,7 @@ import {FooterComponent} from '../footer/footer.component';
 import {HeaderComponent} from '../header/header.component';
 import {NgForOf, NgIf} from '@angular/common';
 import {Router} from "@angular/router";
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-clubs',
@@ -21,12 +22,19 @@ import {Router} from "@angular/router";
   styleUrl: './clubs.component.css'
 })
 export class ClubsComponent implements OnInit {
+  title = 'Clubs';
+
   clubs: ClubDTO[] = [];
   searchKeyword = '';
   page = 1;
   totalpage: number = 0;
 
-  constructor(private clubsService: ClubsService,private router: Router) {
+  constructor(private clubsService: ClubsService,private router: Router,private titleService: Title) {
+    this.setTitle(this.title);
+
+  }
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
   }
 
   ngOnInit(): void {

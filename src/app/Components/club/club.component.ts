@@ -7,6 +7,7 @@ import {ClubDTO} from '../../Models/ClubDTO';
 import {CurrencyPipe, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {PlayerService} from '../../Services/player.service';
 import {PlayerDTO} from '../../Models/PlayerDTO';
+import {Title} from '@angular/platform-browser';
 @Component({
   selector: 'app-club',
   standalone:true,
@@ -21,15 +22,21 @@ import {PlayerDTO} from '../../Models/PlayerDTO';
   styleUrl: './club.component.css'
 })
 export class ClubComponent implements OnInit {
+  title = '';
+
   club!: ClubDTO;
   players: PlayerDTO[] = [];
   page = 1;
+
   totalpage: number = 0;
   clubId:number=0;
 
 
-  constructor(private route: ActivatedRoute,private router:Router, private clubService: ClubsService,private playerService :PlayerService) {}
+  constructor(private route: ActivatedRoute,private router:Router, private clubService: ClubsService,private playerService :PlayerService,private titleService: Title){}
 
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
+  }
   ngOnInit(): void {
     this.clubId = Number(this.route.snapshot.paramMap.get('id'));
     this.getClub(this.clubId);
@@ -39,6 +46,7 @@ export class ClubComponent implements OnInit {
   getClub(clubId: number):void{
     this.clubService.getClubById(clubId).subscribe((data) => {
       this.club = data;
+      this.setTitle(this.club.name);
     });
 }
   getListPlayersByCurrentClub(clubId: number,page :number):void{

@@ -9,6 +9,7 @@ import {FormsModule} from '@angular/forms';
 import {GameDTO} from '../../Models/GameDTO';
 import {MatcheService} from '../../Services/matche.service';
 import {Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-matches',
@@ -25,13 +26,19 @@ import {Router} from '@angular/router';
   styleUrl: './matches.component.css'
 })
 export class MatchesComponent implements OnInit {
+  title = 'Matches';
+
   games: GameDTO[] = [];
   searchKeyword = '';
   page = 1;
   searchCriteria = 'Club'; // Par défaut, critère de recherche = 'name'
   totalpage: number = 0;
 
-  constructor(private matcheService: MatcheService,private router:Router) {
+  constructor(private matcheService: MatcheService,private router:Router,private titleService: Title) {
+    this.setTitle(this.title);
+  }
+  setTitle(newTitle: string) {
+    this.titleService.setTitle(newTitle);
   }
 
   ngOnInit(): void {
