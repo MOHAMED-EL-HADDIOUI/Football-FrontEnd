@@ -24,7 +24,7 @@
           🔍 Rechercher
         </button>
         <!-- Bouton pour afficher le formulaire -->
-        <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition ml-2">
+        <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition ml-2" (click)="openModal()">
           ➕ Ajouter
         </button>
       </div>
@@ -60,7 +60,7 @@
                 <button class="bg-blue-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="navigateToMatche(game.gameId)">
                   🔍
                 </button>
-                <button class="bg-yellow-500 w-1/3 text-white px-3 py-1 rounded flex items-center">
+                <button class="bg-yellow-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="openModal_(game)">
                   ✏️
                 </button>
                 <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center">
@@ -91,6 +91,544 @@
         <p class="text-center text-lg text-gray-200 mt-6">Aucun match trouvé.</p>
       </ng-template>
     </div>
+  </div>
+</section>
+<section class="py-10 ModalOpen" *ngIf="isModalOpen">
+  <div class="container mx-auto opacity-75 m-2 p-2 py-2">
+    <h2 class="text-gray-800 text-2xl font-semibold mb-8 text-center">Ajouter un Matche</h2>
+
+    <!-- Club Addition Form -->
+    <form [formGroup]="matcheForm" (ngSubmit)="addMatche()" class="space-y-6">
+
+      <!-- Club Information -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+          <label for="season" class="block text-sm font-medium text-gray-700">Season :</label>
+          <input type="text" id="season" formControlName="season"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez season"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="round" class="block text-sm font-medium text-gray-700">Round :</label>
+          <input type="text" id="round" formControlName="round"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez round"/>
+        </div>
+      </div>
+
+      <!-- Club Search and Selection -->
+      <div class="mb-4">
+        <label for="homeClub" class="block text-sm font-medium text-gray-700">Home Club :</label>
+        <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchKeyword_"
+            class="p-3 flex-grow rounded border border-gray-300 text-black"
+            placeholder="Rechercher des clubs..."
+            id="clubSearch"
+          />
+          <button
+            class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
+            (click)="searchClubs()"
+          >
+            Rechercher
+          </button>
+        </div>
+        <select formControlName="homeClub" id="homeClub"
+                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+          <option *ngFor="let club of clubs" [ngValue]="club.clubId">
+            {{ club.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center space-x-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_ === 1"
+          (click)="changePage_('left')"
+        >
+          ◀️
+        </button>
+        <span class="text-lg font-semibold">{{ page_ }} / {{ totalpage_}}</span>
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_ >= totalpage_"
+          (click)="changePage_('right')"
+        >
+          ▶️
+        </button>
+      </div>
+
+      <!-- Club Search and Selection -->
+      <div class="mb-4">
+        <label for="awayClub" class="block text-sm font-medium text-gray-700">away Club :</label>
+        <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchKeyword_1"
+            class="p-3 flex-grow rounded border border-gray-300 text-black"
+            placeholder="Rechercher des clubs..."
+            id="clubSearch1"
+          />
+          <button
+            class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
+            (click)="searchClubs_()"
+          >
+            Rechercher
+          </button>
+        </div>
+        <select formControlName="awayClub" id="awayClub"
+                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+          <option *ngFor="let club of clubs_" [ngValue]="club.clubId">
+            {{ club.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center space-x-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_1 === 1"
+          (click)="changePage_1('left')"
+        >
+          ◀️
+        </button>
+        <span class="text-lg font-semibold">{{ page_1 }} / {{ totalpage_1}}</span>
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_1 >= totalpage_1"
+          (click)="changePage_1('right')"
+        >
+          ▶️
+        </button>
+      </div>
+
+      <!-- National Competition Search and Selection -->
+      <div class="mb-4">
+        <label for="competition" class="block text-sm font-medium text-gray-700">Compétition Nationale :</label>
+        <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchKeyword__"
+            class="p-3 flex-grow rounded border border-gray-300 text-black"
+            placeholder="Rechercher des compétitions..."
+            id="competition_search"
+          />
+          <button
+            class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
+            (click)="searchCompetitions()"
+          >
+            Rechercher
+          </button>
+        </div>
+        <select formControlName="competition" id="competition"
+                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+          <option *ngFor="let competition of competitions" [ngValue]="competition.competitionId">
+            {{ competition.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center space-x-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page__ === 1"
+          (click)="changePage__('left')"
+        >
+          ◀️
+        </button>
+        <span class="text-lg font-semibold">{{ page__ }} / {{ totalpage__}}</span>
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page__ >= totalpage__"
+          (click)="changePage__('right')"
+        >
+          ▶️
+        </button>
+      </div>
+
+      <!-- Matche Details -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+          <label for="date" class="block text-sm font-medium text-gray-700">Date :</label>
+          <input type="date" id="date" formControlName="date"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="homeClubGoals" class="block text-sm font-medium text-gray-700">Home Club Goals :</label>
+          <input type="number" id="homeClubGoals" formControlName="homeClubGoals"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="awayClubGoals" class="block text-sm font-medium text-gray-700">Away Club Goals :</label>
+          <input type="number" id="awayClubGoals" formControlName="awayClubGoals"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+        <div class="mb-4">
+          <label for="homeClubPosition" class="block text-sm font-medium text-gray-700">Home Club Position :</label>
+          <input type="number" id="homeClubPosition" formControlName="homeClubPosition"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+        <div class="mb-4">
+          <label for="awayClubPosition" class="block text-sm font-medium text-gray-700">Away Club Position :</label>
+          <input type="number" id="awayClubPosition" formControlName="awayClubPosition"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="homeClubManagerName" class="block text-sm font-medium text-gray-700">Home Club Manager Name:</label>
+          <input type="text" id="homeClubManagerName" formControlName="homeClubManagerName"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="awayClubManagerName" class="block text-sm font-medium text-gray-700">Away Club Manager Name:</label>
+          <input type="text" id="awayClubManagerName" formControlName="awayClubManagerName"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="stadium" class="block text-sm font-medium text-gray-700">Stadium:</label>
+          <input type="text" id="stadium" formControlName="stadium"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+
+        <div class="mb-4">
+          <label for="attendance" class="block text-sm font-medium text-gray-700">Attendance :</label>
+          <input type="number" id="attendance" formControlName="attendance"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="referee" class="block text-sm font-medium text-gray-700">Referee :</label>
+          <input type="text" id="referee" formControlName="referee"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="url" class="block text-sm font-medium text-gray-700">Url :</label>
+          <input type="url" id="url" formControlName="url"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="homeClubFormation" class="block text-sm font-medium text-gray-700">home Club Formation :</label>
+          <input type="number" id="homeClubFormation" formControlName="homeClubFormation"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="awayClubFormation" class="block text-sm font-medium text-gray-700">away Club Formation :</label>
+          <input type="text" id="awayClubFormation" formControlName="awayClubFormation"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="aggregate" class="block text-sm font-medium text-gray-700">aggregate :</label>
+          <input type="text" id="aggregate" formControlName="aggregate"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="competitionType" class="block text-sm font-medium text-gray-700">Competition Type :</label>
+          <input type="text" id="competitionType" formControlName="competitionType"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end mt-4 space-x-4">
+        <button type="button" (click)="closeModal()"
+                class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
+        </button>
+        <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
+                [disabled]="matcheForm.invalid">Ajouter
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+<section class="py-10 ModalOpen" *ngIf="isModalOpen_">
+  <div class="container mx-auto opacity-75 m-2 p-2 py-2">
+    <h2 class="text-gray-800 text-2xl font-semibold mb-8 text-center">Modifier un Matche</h2>
+
+    <!-- Club Addition Form -->
+    <form [formGroup]="matcheForm" (ngSubmit)="updateMatche()" class="space-y-6">
+
+      <!-- Club Information -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+          <label for="season_" class="block text-sm font-medium text-gray-700">Season :</label>
+          <input type="text" id="season_" [value]="matcheData.season"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez season"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="round_" class="block text-sm font-medium text-gray-700">Round :</label>
+          <input type="text" id="round_" [value]="matcheData.round"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez round"/>
+        </div>
+      </div>
+
+      <!-- Club Search and Selection -->
+      <div class="mb-4">
+        <label for="homeClub_" class="block text-sm font-medium text-gray-700">Home Club :</label>
+        <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchKeyword_"
+            class="p-3 flex-grow rounded border border-gray-300 text-black"
+            placeholder="Rechercher des clubs..."
+            id="clubSearch_"
+          />
+          <button
+            class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
+            (click)="searchClubs()"
+          >
+            Rechercher
+          </button>
+        </div>
+        <select [value]="matcheData.homeClub.clubId" id="homeClub_"
+                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+          <option *ngFor="let club of clubs" [ngValue]="club.clubId">
+            {{ club.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center space-x-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_ === 1"
+          (click)="changePage_('left')"
+        >
+          ◀️
+        </button>
+        <span class="text-lg font-semibold">{{ page_ }} / {{ totalpage_}}</span>
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_ >= totalpage_"
+          (click)="changePage_('right')"
+        >
+          ▶️
+        </button>
+      </div>
+
+      <!-- Club Search and Selection -->
+      <div class="mb-4">
+        <label for="awayClub_" class="block text-sm font-medium text-gray-700">away Club :</label>
+        <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchKeyword_1"
+            class="p-3 flex-grow rounded border border-gray-300 text-black"
+            placeholder="Rechercher des clubs..."
+            id="clubSearch1_"
+          />
+          <button
+            class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
+            (click)="searchClubs_()"
+          >
+            Rechercher
+          </button>
+        </div>
+        <select id="awayClub_"  [value]="matcheData.awayClub.clubId"
+                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+          <option *ngFor="let club of clubs_" [ngValue]="club.clubId">
+            {{ club.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center space-x-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_1 === 1"
+          (click)="changePage_1('left')"
+        >
+          ◀️
+        </button>
+        <span class="text-lg font-semibold">{{ page_1 }} / {{ totalpage_1}}</span>
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page_1 >= totalpage_1"
+          (click)="changePage_1('right')"
+        >
+          ▶️
+        </button>
+      </div>
+
+      <!-- National Competition Search and Selection -->
+      <div class="mb-4">
+        <label for="competition_" class="block text-sm font-medium text-gray-700">Compétition Nationale :</label>
+        <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchKeyword__"
+            class="p-3 flex-grow rounded border border-gray-300 text-black"
+            placeholder="Rechercher des compétitions..."
+            id="competition_search_"
+          />
+          <button
+            class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded transition"
+            (click)="searchCompetitions()"
+          >
+            Rechercher
+          </button>
+        </div>
+        <select formControlName="competition" id="competition_" [value]="matcheData.competition.competitionId"
+                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+          <option *ngFor="let competition of competitions" [ngValue]="competition.competitionId">
+            {{ competition.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center items-center space-x-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page__ === 1"
+          (click)="changePage__('left')"
+        >
+          ◀️
+        </button>
+        <span class="text-lg font-semibold">{{ page__ }} / {{ totalpage__}}</span>
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50"
+          [disabled]="page__ >= totalpage__"
+          (click)="changePage__('right')"
+        >
+          ▶️
+        </button>
+      </div>
+
+      <!-- Matche Details -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+          <label for="date_" class="block text-sm font-medium text-gray-700">Date :</label>
+          <input type="date" id="date_" [value]="matcheData.date"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="homeClubGoals" class="block text-sm font-medium text-gray-700">Home Club Goals :</label>
+          <input type="number" id="homeClubGoals_" [value]="matcheData.homeClubGoals"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="awayClubGoals_" class="block text-sm font-medium text-gray-700">Away Club Goals :</label>
+          <input type="number" id="awayClubGoals_" [value]="matcheData.awayClubGoals"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+        <div class="mb-4">
+          <label for="homeClubPosition_" class="block text-sm font-medium text-gray-700">Home Club Position :</label>
+          <input type="number" id="homeClubPosition_" [value]="matcheData.homeClubPosition"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+        <div class="mb-4">
+          <label for="awayClubPosition_" class="block text-sm font-medium text-gray-700">Away Club Position :</label>
+          <input type="number" id="awayClubPosition_" [value]="matcheData.awayClubPosition"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="homeClubManagerName_" class="block text-sm font-medium text-gray-700">Home Club Manager Name:</label>
+          <input type="text" id="homeClubManagerName_" [value]="matcheData.homeClubManagerName"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="awayClubManagerName_" class="block text-sm font-medium text-gray-700">Away Club Manager Name:</label>
+          <input type="text" id="awayClubManagerName_" [value]="matcheData.awayClubManagerName"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="stadium_" class="block text-sm font-medium text-gray-700">Stadium:</label>
+          <input type="text" id="stadium_" [value]="matcheData.stadium"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+
+        <div class="mb-4">
+          <label for="attendance_" class="block text-sm font-medium text-gray-700">Attendance :</label>
+          <input type="number" id="attendance_" [value]="matcheData.attendance"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="referee_" class="block text-sm font-medium text-gray-700">Referee :</label>
+          <input type="text" id="referee_" [value]="matcheData.referee"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="url_" class="block text-sm font-medium text-gray-700">Url :</label>
+          <input type="url" id="url_" [value]="matcheData.url"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="homeClubFormation_" class="block text-sm font-medium text-gray-700">home Club Formation :</label>
+          <input type="number" id="homeClubFormation_" [value]="matcheData.homeClubFormation"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="awayClubFormation_" class="block text-sm font-medium text-gray-700">away Club Formation :</label>
+          <input type="text" id="awayClubFormation_" [value]="matcheData.awayClubFormation"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="aggregate_" class="block text-sm font-medium text-gray-700">aggregate :</label>
+          <input type="text" id="aggregate_" [value]="matcheData.aggregate"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+
+        <div class="mb-4">
+          <label for="competitionType_" class="block text-sm font-medium text-gray-700">Competition Type :</label>
+          <input type="text" id="competitionType_" [value]="matcheData.competitionType"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end mt-4 space-x-4">
+        <button type="button" (click)="closeModal_()"
+                class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
+        </button>
+        <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
+         >Ajouter
+        </button>
+      </div>
+    </form>
   </div>
 </section>
 

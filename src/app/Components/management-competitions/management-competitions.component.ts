@@ -56,7 +56,6 @@ export class ManagementCompetitionsComponent implements OnInit{
       url: ['', Validators.required]
     });
     this.loadCompetitions();
-    console.log(this.competitions)
   }
 
   loadCompetitions(): void {

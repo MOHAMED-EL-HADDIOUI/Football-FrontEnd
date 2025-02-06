@@ -8,7 +8,6 @@ export interface PlayerDTO {
   name: string;
   lastSeason: number;
   currentClub: ClubDTO;
-
   playerCode: string;
   countryOfBirth: string;
   cityOfBirth: string;
