@@ -57,7 +57,7 @@
                 <button class="bg-yellow-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="openModal_(player)">
                   ✏️
                 </button>
-                <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center">
+                <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="deletePlayer(player)">
                   🗑️
                 </button>
               </td>
@@ -319,20 +319,20 @@
     <h2 class="text-gray-800 text-2xl font-semibold mb-8 text-center">Modifier un Player</h2>
 
     <!-- Club Addition Form -->
-    <form (ngSubmit)="updatePlayer()" class="space-y-6">
+    <form [formGroup]="playerForm" (ngSubmit)="updatePlayer()" class="space-y-6">
 
       <!-- Club Information -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="mb-4">
           <label for="firstName_" class="block text-sm font-medium text-gray-700">First Name :</label>
-          <input type="text" id="firstName_"  [value]="playerData.firstName"
+          <input type="text" id="firstName_"  formControlName="firstName"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                  placeholder="Entrez firstName"/>
         </div>
 
         <div class="mb-4">
           <label for="lastName_" class="block text-sm font-medium text-gray-700">Last Name :</label>
-          <input type="text" id="lastName_" [value]="playerData.lastName"
+          <input type="text" id="lastName_" formControlName="lastName"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                  placeholder="Entrez lastName"/>
         </div>
@@ -356,7 +356,7 @@
             Rechercher
           </button>
         </div>
-        <select formControlName="currentClub" id="currentClub_" [value]="playerData.currentClub.clubId"
+        <select formControlName="currentClub" id="currentClub_"
                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
           <option *ngFor="let club of clubs" [ngValue]="club.clubId">
             {{ club.name }}
@@ -403,7 +403,7 @@
             Rechercher
           </button>
         </div>
-        <select [value]="playerData.competition.competitionId" id="competition_"
+        <select formControlName="competition" id="competition_"
                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
           <option *ngFor="let competition of competitions" [ngValue]="competition.competitionId">
             {{ competition.name }}
@@ -436,95 +436,95 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="mb-4">
           <label for="playerCode_" class="block text-sm font-medium text-gray-700">Player Code :</label>
-          <input type="text" id="playerCode_" [value]="playerData.playerCode"
+          <input type="text" id="playerCode_" formControlName="playerCode"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="countryOfBirth_" class="block text-sm font-medium text-gray-700">Country of Birth :</label>
-          <input type="text" id="countryOfBirth_" [value]="playerData.countryOfBirth"
+          <input type="text" id="countryOfBirth_" formControlName="countryOfBirth"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="cityOfBirth_" class="block text-sm font-medium text-gray-700">City of Birth :</label>
-          <input type="text" id="cityOfBirth_" [value]="playerData.cityOfBirth"
+          <input type="text" id="cityOfBirth_" formControlName="cityOfBirth"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="imageUrl_" class="block text-sm font-medium text-gray-700">image Url :</label>
-          <input type="url" id="imageUrl_" [value]="playerData.imageUrl"
+          <input type="url" id="imageUrl_" formControlName="imageUrl"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
         <div class="mb-4">
           <label for="url_" class="block text-sm font-medium text-gray-700">Url :</label>
-          <input type="url" id="url_" [value]="playerData.url"
+          <input type="url" id="url_" formControlName="url"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="countryOfCitizenship_" class="block text-sm font-medium text-gray-700">Country Of Citizenship :</label>
-          <input type="text" id="countryOfCitizenship_" [value]="playerData.countryOfCitizenship"
+          <input type="text" id="countryOfCitizenship_" formControlName="countryOfCitizenship"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="dateOfBirth_" class="block text-sm font-medium text-gray-700">Date of Birth :</label>
-          <input type="date" id="dateOfBirth_" [value]="playerData.dateOfBirth"
+          <input type="date" id="dateOfBirth_" formControlName="dateOfBirth"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="position_" class="block text-sm font-medium text-gray-700">Position :</label>
-          <input type="text" id="position_" [value]="playerData.position"
+          <input type="text" id="position_" formControlName="position"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="subPosition_" class="block text-sm font-medium text-gray-700">Sub Position :</label>
-          <input type="text" id="subPosition_" [value]="playerData.subPosition"
+          <input type="text" id="subPosition_" formControlName="subPosition"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="foot_" class="block text-sm font-medium text-gray-700">Preferred Foot :</label>
-          <input type="text" id="foot_" [value]="playerData.foot"
+          <input type="text" id="foot_" formControlName="foot"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="heightInCm_" class="block text-sm font-medium text-gray-700">Height (cm) :</label>
-          <input type="number" id="heightInCm_" [value]="playerData.heightInCm"
+          <input type="number" id="heightInCm_" formControlName="heightInCm"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="agentName_" class="block text-sm font-medium text-gray-700">Agent Name :</label>
-          <input type="text" id="agentName_" [value]="playerData.agentName"
+          <input type="text" id="agentName_" formControlName="agentName"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="highestMarketValueInEur_" class="block text-sm font-medium text-gray-700">Highest Market Value (€) :</label>
-          <input type="number" id="highestMarketValueInEur_" [value]="playerData.highestMarketValueInEur"
+          <input type="number" id="highestMarketValueInEur_" formControlName="highestMarketValueInEur"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="marketValueInEur_" class="block text-sm font-medium text-gray-700">Market Value (€) :</label>
-          <input type="number" id="marketValueInEur_" [value]="playerData.marketValueInEur"
+          <input type="number" id="marketValueInEur_" formControlName="marketValueInEur"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
         <div class="mb-4">
           <label for="lastSeason_" class="block text-sm font-medium text-gray-700">Dernière Saison :</label>
-          <input type="number" id="lastSeason_" [value]="playerData.lastSeason"
+          <input type="number" id="lastSeason_" formControlName="lastSeason"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="contractExpirationDate_" class="block text-sm font-medium text-gray-700">Contract Expiration Date :</label>
-          <input type="date" id="contractExpirationDate_" [value]="playerData.contractExpirationDate"
+          <input type="date" id="contractExpirationDate_" formControlName="contractExpirationDate"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
       </div>
@@ -535,7 +535,7 @@
                 class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
         </button>
         <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
-                >Ajouter
+                [disabled]="playerForm.invalid" >Modifier
         </button>
       </div>
     </form>

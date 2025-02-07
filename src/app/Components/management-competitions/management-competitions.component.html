@@ -51,7 +51,7 @@
                 <button class="bg-yellow-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="openModal_(competition)">
                   ✏️
                 </button>
-                <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center">
+                <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="deleteCompetition(competition)">
                   🗑️
                 </button>
               </td>
@@ -98,6 +98,13 @@
         </div>
 
         <div class="mb-4">
+          <label for="competitionId" class="block text-sm font-medium text-gray-700">Id de la Compétition :</label>
+          <input type="text" id="competitionId" formControlName="competitionId"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le id de la compétition"/>
+        </div>
+
+        <div class="mb-4">
           <label for="name" class="block text-sm font-medium text-gray-700">Nom :</label>
           <input type="text" id="name" formControlName="name"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
@@ -120,6 +127,12 @@
           <input type="text" id="subType" formControlName="subType"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                  placeholder="Entrez le sous-type (ex: Coupe, Ligue)"/>
+        </div>
+        <div class="mb-4">
+          <label for="countryName" class="block text-sm font-medium text-gray-700">Sous-type :</label>
+          <input type="text" id="countryName" formControlName="countryName"
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                 placeholder="Entrez le country Name"/>
         </div>
 
         <div class="mb-4">
@@ -168,7 +181,7 @@
                 class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
         </button>
         <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
-                [disabled]="competitionForm.invalid">Ajouter
+                [disabled]="competitionForm.invalid">Modifier
         </button>
       </div>
     </form>
@@ -188,19 +201,19 @@
           <label for="competitionCode_" class="block text-sm font-medium text-gray-700">Code de la Compétition :</label>
           <input type="text" id="competitionCode_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Entrez le code de la compétition" [value]="competitionData.competitionCode"/>
+                 placeholder="Entrez le code de la compétition" formControlName="competitionCode"/>
         </div>
 
         <div class="mb-4">
           <label for="name_" class="block text-sm font-medium text-gray-700">Nom :</label>
           <input type="text" id="name_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Entrez le nom de la compétition" [value]="competitionData.name"/>
+                 placeholder="Entrez le nom de la compétition" formControlName="name"/>
         </div>
 
         <div class="mb-4">
           <label for="type_" class="block text-sm font-medium text-gray-700">Type :</label>
-          <select id="type_"  [value]="competitionData.type"
+          <select id="type_"  formControlName="type"
                   class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
             <option value="">Sélectionnez un type</option>
             <option value="International">International</option>
@@ -213,19 +226,19 @@
           <label for="subType_" class="block text-sm font-medium text-gray-700">Sous-type :</label>
           <input type="text" id="subType_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Entrez le sous-type (ex: Coupe, Ligue)" [value]="competitionData.subType"/>
+                 placeholder="Entrez le sous-type (ex: Coupe, Ligue)" formControlName="subType"/>
         </div>
 
         <div class="mb-4">
           <label for="confederation_" class="block text-sm font-medium text-gray-700">Confédération :</label>
           <input type="text" id="confederation_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Ex: UEFA, CAF, CONMEBOL" [value]="competitionData.confederation"/>
+                 placeholder="Ex: UEFA, CAF, CONMEBOL" formControlName="confederation"/>
         </div>
 
         <div class="mb-4">
           <label for="countryId_" class="block text-sm font-medium text-gray-700">Pays :</label>
-          <select id="countryId_"
+          <select id="countryId_" formControlName="countryId"
                   class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
             <option *ngFor="let country of countries" [ngValue]="country.id">{{ country.name }}</option>
           </select>
@@ -235,12 +248,12 @@
           <label for="domesticLeagueCode_" class="block text-sm font-medium text-gray-700">Code de la Ligue Nationale :</label>
           <input type="text" id="domesticLeagueCode_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Ex: L1, EPL, Serie A" [value]="competitionData.domesticLeagueCode" />
+                 placeholder="Ex: L1, EPL, Serie A" formControlName="domesticLeagueCode" />
         </div>
 
         <div class="mb-4">
           <label for="isMajorNationalLeague_" class="block text-sm font-medium text-gray-700">Ligue Nationale Majeure :</label>
-          <select id="isMajorNationalLeague_"  [value]="competitionData.isMajorNationalLeague"
+          <select id="isMajorNationalLeague_"  formControlName="isMajorNationalLeague"
                   class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
             <option [ngValue]="true">Oui</option>
             <option [ngValue]="false">Non</option>
@@ -251,7 +264,7 @@
           <label for="url" class="block text-sm font-medium text-gray-700">URL :</label>
           <input type="url" id="url_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Lien vers la compétition" [value]="competitionData.url"/>
+                 placeholder="Lien vers la compétition" formControlName="url"/>
         </div>
 
       </div>

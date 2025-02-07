@@ -49,7 +49,7 @@
                 <button class="bg-blue-500 text-white px-3 py-1 rounded" (click)="navigateToClub(club.clubId)">🔍
                 </button>
                 <button class="bg-yellow-500 text-white px-3 py-1 rounded" (click)="openModal_(club)">✏️</button>
-                <button class="bg-red-500 text-white px-3 py-1 rounded">🗑️</button>
+                <button class="bg-red-500 text-white px-3 py-1 rounded" (click)="deleteClub(club)">🗑️</button>
               </td>
             </tr>
             </tbody>
@@ -251,7 +251,7 @@
     <h2 class="text-gray-800 text-2xl font-semibold mb-8 text-center">Modifier un Club</h2>
 
     <!-- Club Addition Form -->
-    <form (ngSubmit)="updateClub()" class="space-y-6">
+    <form [formGroup]="clubForm"  (ngSubmit)="updateClub()" class="space-y-6">
 
       <!-- Club Information -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -259,14 +259,14 @@
           <label for="clubCode_" class="block text-sm font-medium text-gray-700">Code du Club :</label>
           <input type="text" id="clubCode_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Entrez le code du club" [value]="clubData.clubCode"/>
+                 placeholder="Entrez le code du club" formControlName="clubCode"/>
         </div>
 
         <div class="mb-4">
           <label for="name_" class="block text-sm font-medium text-gray-700">Nom :</label>
           <input type="text" id="name_"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                 placeholder="Entrez le nom du club" [value]="clubData.name"/>
+                 placeholder="Entrez le nom du club" formControlName="name"/>
         </div>
       </div>
 
@@ -289,8 +289,8 @@
           </button>
         </div>
         <select id="domesticCompetition_"
-                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.domesticCompetition.name">
-          <option *ngFor="let competition of competitions">{{ competition.name }}</option>
+                class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="domesticCompetition">
+          <option *ngFor="let competition of competitions" [ngValue]="competition.competitionId">{{ competition.name }}</option>
         </select>
       </div>
 
@@ -321,82 +321,82 @@
           <label for="totalMarketValue_" class="block text-sm font-medium text-gray-700">Valeur Totale du Marché
             :</label>
           <input type="number" id="totalMarketValue_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.totalMarketValue"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="totalMarketValue"/>
         </div>
 
         <div class="mb-4">
           <label for="squadSize_" class="block text-sm font-medium text-gray-700">Effectif :</label>
           <input type="number" id="squadSize_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.squadSize"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="squadSize"/>
         </div>
 
         <div class="mb-4">
           <label for="averageAge_" class="block text-sm font-medium text-gray-700">Âge Moyen :</label>
           <input type="number" id="averageAge_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.averageAge"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="averageAge"/>
         </div>
 
         <div class="mb-4">
           <label for="foreignersNumber_" class="block text-sm font-medium text-gray-700">Joueurs Étrangers :</label>
           <input type="number" id="foreignersNumber_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.foreignersNumber"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="foreignersNumber"/>
         </div>
 
         <div class="mb-4">
           <label for="foreignersPercentage_" class="block text-sm font-medium text-gray-700">Pourcentage de Joueurs
             Étrangers :</label>
           <input type="number" id="foreignersPercentage_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.foreignersPercentage"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="foreignersPercentage"/>
         </div>
 
         <div class="mb-4">
           <label for="nationalTeamPlayers_" class="block text-sm font-medium text-gray-700">Joueurs en Équipe Nationale
             :</label>
           <input type="number" id="nationalTeamPlayers_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.nationalTeamPlayers"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="nationalTeamPlayers"/>
         </div>
 
         <div class="mb-4">
           <label for="stadiumName_" class="block text-sm font-medium text-gray-700">Nom du Stade :</label>
           <input type="text" id="stadiumName_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.stadiumName"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="stadiumName"/>
         </div>
 
         <div class="mb-4">
           <label for="stadiumSeats_" class="block text-sm font-medium text-gray-700">Capacité du Stade :</label>
           <input type="number" id="stadiumSeats_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.stadiumSeats"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="stadiumSeats"/>
         </div>
 
         <div class="mb-4">
           <label for="netTransferRecord_" class="block text-sm font-medium text-gray-700">Historique des Transferts
             :</label>
           <input type="text" id="netTransferRecord_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.netTransferRecord"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="netTransferRecord"/>
         </div>
 
         <div class="mb-4">
           <label for="coachName_" class="block text-sm font-medium text-gray-700">Nom de l'Entraîneur :</label>
           <input type="text" id="coachName_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.coachName"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="coachName"/>
         </div>
 
         <div class="mb-4">
           <label for="lastSeason_" class="block text-sm font-medium text-gray-700">Dernière Saison :</label>
           <input type="number" id="lastSeason_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.lastSeason"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="lastSeason"/>
         </div>
 
         <div class="mb-4">
           <label for="filename_" class="block text-sm font-medium text-gray-700">Nom du Fichier :</label>
           <input type="text" id="filename_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.filename"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="filename"/>
         </div>
 
         <div class="mb-4">
           <label for="url_" class="block text-sm font-medium text-gray-700">URL :</label>
           <input type="url" id="url_"
-                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" [value]="clubData.url"/>
+                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400" formControlName="url"/>
         </div>
       </div>
 
@@ -406,7 +406,7 @@
                 class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
         </button>
         <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
-                [disabled]="clubForm.invalid">Ajouter
+                [disabled]="clubForm.invalid">Modifier
         </button>
       </div>
     </form>

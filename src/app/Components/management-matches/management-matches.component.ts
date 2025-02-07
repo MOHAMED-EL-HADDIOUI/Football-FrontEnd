@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FooterComponent} from '../footer/footer.component';
 import {HeaderComponent} from '../header/header.component';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {GameDTO} from '../../Models/GameDTO';
 import {MatcheService} from '../../Services/matche.service';
 import {Router} from '@angular/router';
@@ -10,6 +10,9 @@ import {ClubDTO} from '../../Models/ClubDTO';
 import {CompetitionDTO} from '../../Models/CompetitionDTO';
 import {CompetitionsService} from '../../Services/competitions.service';
 import {ClubsService} from '../../Services/clubs.service';
+import Swal from 'sweetalert2';
+import {Player_DTO} from '../../Models/Player_DTO';
+import {Game_DTO} from '../../Models/Game_DTO';
 
 @Component({
   selector: 'app-management-matches',
@@ -42,7 +45,6 @@ import {ClubsService} from '../../Services/clubs.service';
   page_ = 1;
   totalpage_: number = 0;
 
-  matcheData!:GameDTO;
 
   clubs_: ClubDTO[] = [];
   searchKeyword_1 = '';
@@ -55,11 +57,36 @@ import {ClubsService} from '../../Services/clubs.service';
   totalpage__: number = 0;
 
 
-
   constructor(private matcheService: MatcheService,private competitionsService:CompetitionsService,private clubsService :ClubsService,private router:Router,private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
+    this.matcheForm = this.fb.group({
+      gameId: [null],
+      round: ['', Validators.required],
+      lastName: ['', Validators.required],
+      awayClubGoals: ['',Validators.required],
+      homeClubGoals: ['',Validators.required],
+      awayClubPosition: ['',Validators.required],
+      homeClubPosition: ['',Validators.required],
+      season: ['',Validators.required],
+      homeClub: ['', Validators.required],
+      awayClub: ['', Validators.required],
+      date: ['', Validators.required],
+      attendance: ['', Validators.required],
+      stadium: ['', Validators.required],
+      awayClubManagerName: ['', Validators.required],
+      homeClubManagerName: ['', Validators.required],
+      awayClubFormation: ['', Validators.required],
+      homeClubFormation: ['', Validators.required],
+      awayClubName: ['',],
+      homeClubName: ['',],
+      referee:['', Validators.required],
+      url: [''],
+      competition: ['', Validators.required],
+      aggregate: ['', Validators.required],
+      competitionType: ['', Validators.required],
+    });
     this.loadGames();
   }
 
@@ -170,22 +197,126 @@ import {ClubsService} from '../../Services/clubs.service';
 
 
   addMatche() {
+    if (this.matcheForm.valid) {
+      const newGame: Game_DTO = {
+        ...this.matcheForm.value
+      };
+      this.matcheService.addGame(newGame).subscribe(
+        (response) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Le Matche a été ajouté avec succès !',
+            showConfirmButton: true,
+            timer: 1500
+          });
+        },
+        (error) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Erreur lors de l’ajout du matche :',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      );
+      this.closeModal();
+      this.matcheForm.reset();
+    }
 
   }
   updateMatche() {
-
+    if (this.matcheForm.valid) {
+      const updateGame: Game_DTO = {
+        ...this.matcheForm.value
+      };
+      this.matcheService.updateGame(updateGame).subscribe(
+        (response) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Le Matche a été modifié avec succès !',
+            showConfirmButton: true,
+            timer: 1500
+          });
+        },
+        (error) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Erreur lors de le modifier du Matche :',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      );
+      this.closeModal_();
+      this.matcheForm.reset();
+    }
+  }
+  deleteMatche(match:GameDTO) {
+    this.matcheService.deleteGameById(match.gameId).subscribe(
+      (response) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Le match a été supprimé avec succès !',
+          showConfirmButton: true,
+          timer: 1500
+        });
+      },
+      (error) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Erreur lors de l’supprime du matche :',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    );
   }
   openModal() {
     this.isModalOpen = true;
   }
   closeModal() {
     this.isModalOpen = false;
+    this.matcheForm.reset(); // Réinitialisation du formulaire
   }
   openModal_(matcheData :GameDTO) {
+    this.matcheForm = this.fb.group({
+      gameId: matcheData.gameId,
+      round: matcheData.round,
+      lastName: matcheData.round,
+      awayClubGoals: matcheData.awayClubGoals,
+      homeClubGoals: matcheData.homeClubGoals,
+      awayClubPosition: matcheData.awayClubPosition,
+      homeClubPosition: matcheData.homeClubPosition,
+      season: matcheData.season,
+      homeClub: matcheData.homeClub,
+      awayClub: matcheData.awayClub,
+      date: [matcheData.date ? new Date(matcheData.date).toISOString().split('T')[0] : null],
+      attendance: matcheData.attendance,
+      stadium: matcheData.stadium,
+      awayClubManagerName: matcheData.awayClubManagerName,
+      homeClubManagerName: matcheData.homeClubManagerName,
+      awayClubFormation: matcheData.awayClubFormation,
+      homeClubFormation: matcheData.homeClubFormation,
+      awayClubName: matcheData.awayClubName,
+      homeClubName: matcheData.homeClubName,
+      referee:matcheData.referee,
+      url: matcheData.url,
+      competition: matcheData.competition,
+      aggregate: matcheData.aggregate,
+      competitionType: matcheData.competitionType,
+    });
     this.isModalOpen_ = true;
   }
   closeModal_() {
     this.isModalOpen_ = false;
+    this.matcheForm.reset(); // Réinitialisation du formulaire
+
   }
 
 }

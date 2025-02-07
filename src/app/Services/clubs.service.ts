@@ -6,6 +6,7 @@ import {CompetitionsDTO} from '../Models/CompetitionsDTO';
 import {ClubsDTO} from '../Models/ClubsDTO';
 import {ClubDTO} from '../Models/ClubDTO';
 import {PlayersDTO} from '../Models/PlayersDTO';
+import {Club_DTO} from '../Models/Club_DTO';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +26,14 @@ export class ClubsService {
     return this.http.get<ClubsDTO>(this.apiUrl+"competition?idCompetition="+idCompetition+"&page="+page);
   }
 
-  addClub(newClub: ClubDTO): Observable<ClubDTO> {
-    return this.http.post<ClubDTO>(this.apiUrl+'/add', newClub);
+  addClub(newClub: Club_DTO): Observable<ClubDTO> {
+    return this.http.post<ClubDTO>(this.apiUrl+'add', newClub);
+  }
+  updateClub(updateClub: Club_DTO): Observable<ClubDTO> {
+    return this.http.put<ClubDTO>(this.apiUrl+'update', updateClub);
   }
 
+  deleteClubById(clubId: number): Observable<any> {
+    return this.http.delete<any>(this.apiUrl+'delete/'+clubId);
+  }
 }

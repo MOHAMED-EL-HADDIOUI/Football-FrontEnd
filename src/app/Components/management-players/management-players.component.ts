@@ -10,6 +10,9 @@ import {ClubDTO} from '../../Models/ClubDTO';
 import {CompetitionDTO} from '../../Models/CompetitionDTO';
 import {ClubsService} from '../../Services/clubs.service';
 import {CompetitionsService} from '../../Services/competitions.service';
+import {Club_DTO} from '../../Models/Club_DTO';
+import Swal from 'sweetalert2';
+import {Player_DTO} from '../../Models/Player_DTO';
 
 @Component({
   selector: 'app-management-players',
@@ -20,7 +23,7 @@ import {CompetitionsService} from '../../Services/competitions.service';
     NgIf,
     ReactiveFormsModule,
     FormsModule,
-    CurrencyPipe
+    CurrencyPipe,
   ],
   standalone:true,
   templateUrl: './management-players.component.html',
@@ -48,8 +51,6 @@ export class ManagementPlayersComponent implements OnInit{
   page__ = 1;
   totalpage__: number = 0;
 
-  playerData!:PlayerDTO;
-
   constructor(private playerService: PlayerService,private router: Router,private fb: FormBuilder,private clubsService:ClubsService,private competitionsService: CompetitionsService) {
   }
 
@@ -58,17 +59,17 @@ export class ManagementPlayersComponent implements OnInit{
     this.loadCompetitions();
     this.loadClubs();
     this.playerForm = this.fb.group({
-      playerId: [null, Validators.required],
+      playerId: [null],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      name: ['', Validators.required],
+      name: [''],
       lastSeason: [null],
-      currentClub: [null, Validators.required],
+      currentClub: ['', Validators.required],
       playerCode: [''],
       countryOfBirth: [''],
       cityOfBirth: [''],
       countryOfCitizenship: [''],
-      dateOfBirth: [null, Validators.required],
+      dateOfBirth: ['', Validators.required],
       subPosition: [''],
       position: ['', Validators.required],
       foot: [''],
@@ -77,7 +78,7 @@ export class ManagementPlayersComponent implements OnInit{
       agentName: [''],
       imageUrl: [''],
       url: [''],
-      competition: [null, Validators.required],
+      competition: ['', Validators.required],
       currentClubName: [''],
       marketValueInEur: [null],
       highestMarketValueInEur: [null],
@@ -153,6 +154,35 @@ export class ManagementPlayersComponent implements OnInit{
   }
 
   addPlayer() {
+    console.log(this.playerForm.value)
+    if (this.playerForm.valid) {
+      console.log("addPlayer")
+      const newPlayer: Player_DTO = {
+        ...this.playerForm.value
+      };
+      this.playerService.addPlayer(newPlayer).subscribe(
+        (response) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Le Player a été ajouté avec succès !',
+            showConfirmButton: true,
+            timer: 1500
+          });
+        },
+        (error) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Erreur lors de l’ajout du player :',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      );
+      this.closeModal();
+      this.playerForm.reset();
+    }
 
   }
 
@@ -175,18 +205,94 @@ export class ManagementPlayersComponent implements OnInit{
 
   closeModal() {
     this.isModalOpen = false;
+    this.playerForm.reset(); // Réinitialisation du formulaire
+
   }
   openModal() {
     this.isModalOpen = true;
   }
   closeModal_() {
     this.isModalOpen_ = false;
+    this.playerForm.reset(); // Réinitialisation du formulaire
   }
   openModal_(playerData:PlayerDTO) {
+    this.playerForm = this.fb.group({
+      playerId: playerData.playerId,
+      firstName: playerData.firstName,
+      lastName: playerData.lastName,
+      name: playerData.name,
+      lastSeason: playerData.lastSeason,
+      currentClub: playerData.currentClub.clubId,
+      playerCode: playerData.playerCode,
+      countryOfBirth: playerData.countryOfBirth,
+      cityOfBirth: playerData.cityOfBirth,
+      countryOfCitizenship: playerData.countryOfCitizenship,
+      dateOfBirth: [playerData.dateOfBirth ? new Date(playerData.dateOfBirth).toISOString().split('T')[0] : null],
+      subPosition: playerData.subPosition,
+      position: playerData.position,
+      foot: playerData.foot,
+      heightInCm: playerData.heightInCm,
+      contractExpirationDate: [playerData.contractExpirationDate ? new Date(playerData.contractExpirationDate).toISOString().split('T')[0] : null],
+      agentName: playerData.agentName,
+      imageUrl: playerData.imageUrl,
+      url: playerData.url,
+      competition: playerData.competition.competitionId,
+      currentClubName: playerData.currentClubName,
+      marketValueInEur: playerData.marketValueInEur,
+      highestMarketValueInEur: playerData.highestMarketValueInEur,
+    });
     this.isModalOpen_ = true;
   }
 
   updatePlayer() {
-
+    if (this.playerForm.valid) {
+      const updatePlayer: Player_DTO = {
+        ...this.playerForm.value
+      };
+      this.playerService.updatePlayer(updatePlayer).subscribe(
+        (response) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Le Player a été modifié avec succès !',
+            showConfirmButton: true,
+            timer: 1500
+          });
+        },
+        (error) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Erreur lors de le modifier du player :',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      );
+      this.closeModal_();
+      this.playerForm.reset();
+    }
+  }
+  deletePlayer(player:PlayerDTO):void{
+    this.playerService.deletePlayerById(player.playerId).subscribe(
+      (response) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Le player a été supprimé avec succès !',
+          showConfirmButton: true,
+          timer: 1500
+        });
+      },
+      (error) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Erreur lors de l’supprime du player :',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    );
   }
 }

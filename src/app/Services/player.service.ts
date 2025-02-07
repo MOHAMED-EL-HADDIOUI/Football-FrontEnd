@@ -5,6 +5,8 @@ import {PlayersDTO} from '../Models/PlayersDTO';
 import {environment} from '../environments/environment';
 import {ClubDTO} from '../Models/ClubDTO';
 import {PlayerDTO} from '../Models/PlayerDTO';
+import {CompetitionDTO} from '../Models/CompetitionDTO';
+import {Player_DTO} from '../Models/Player_DTO';
 
 @Injectable({
   providedIn: 'root'
@@ -25,4 +27,13 @@ export class PlayerService {
     return this.http.get<PlayerDTO>(this.apiUrl+playerId);
   }
 
+  addPlayer(newPlayer: Player_DTO): Observable<PlayerDTO> {
+    return this.http.post<PlayerDTO>(this.apiUrl+'add', newPlayer);
+  }
+  updatePlayer(updatePlayer: Player_DTO): Observable<PlayerDTO> {
+    return this.http.put<PlayerDTO>(this.apiUrl+'update', updatePlayer);
+  }
+  deletePlayerById(playerId: number) :Observable<any> {
+    return this.http.delete<any>(this.apiUrl+'delete/'+playerId);
+  }
 }

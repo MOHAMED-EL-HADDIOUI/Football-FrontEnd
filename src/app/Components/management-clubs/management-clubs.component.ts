@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import {CompetitionDTO} from '../../Models/CompetitionDTO';
 import {CompetitionsService} from '../../Services/competitions.service';
 import Swal from "sweetalert2";
+import {Club_DTO} from '../../Models/Club_DTO';
 @Component({
   selector: 'app-management-clubs',
   imports: [
@@ -123,31 +124,72 @@ export class ManagementClubsComponent implements OnInit{
     this.isModalOpen = true;
     this.loadCompetitions();
   }
-  openModal_(clubData:ClubDTO) {
-    this.clubData=clubData;
+  openModal_(club:ClubDTO) {
+    this.clubForm = this.fb.group({
+      clubId:club.clubId,
+      clubCode: club.clubCode,
+      name: club.name,
+      totalMarketValue: club.totalMarketValue,
+      domesticCompetition:club.domesticCompetition.competitionId,
+      squadSize: club.squadSize,
+      averageAge: club.averageAge,
+      foreignersNumber: club.foreignersNumber,
+      foreignersPercentage: club.foreignersPercentage,
+      nationalTeamPlayers: club.nationalTeamPlayers,
+      stadiumName: club.stadiumName,
+      stadiumSeats: club.stadiumSeats,
+      netTransferRecord: club.netTransferRecord,
+      coachName: club.coachName,
+      lastSeason: club.lastSeason,
+      filename: club.filename,
+      url: club.url
+    });
     this.isModalOpen_ = true;
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.clubForm.reset(); // Réinitialisation du formulaire
   }
   closeModal_() {
     this.isModalOpen_ = false;
+    this.clubForm.reset(); // Réinitialisation du formulaire
+
+  }
+  deleteClub(club:ClubDTO):void{
+    this.clubsService.deleteClubById(club.clubId).subscribe(
+      (response) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Le livre a été supprimé avec succès !',
+          showConfirmButton: true,
+          timer: 1500
+        });
+      },
+      (error) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Erreur lors de l’supprime du club :',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    );
   }
   addClub() {
     if (this.clubForm.valid) {
-      const newClub: ClubDTO = {
-        clubId: '',
+      const newClub: Club_DTO = {
         ...this.clubForm.value
       };
-      console.log(newClub)
       this.clubsService.addClub(newClub).subscribe(
         (response) => {
           Swal.fire({
             position: 'center',
             icon: 'success',
             title: 'Le livre a été ajouté avec succès !',
-            showConfirmButton: false,
+            showConfirmButton: true,
             timer: 1500
           });
         },
@@ -162,26 +204,37 @@ export class ManagementClubsComponent implements OnInit{
         }
       );
       this.closeModal();
-      this.clubForm.reset(); // Réinitialisation du formulaire
+      this.clubForm.reset();
     }
   }
   updateClub() {
     if (this.clubForm.valid) {
-      const newClub: ClubDTO = {
-        clubId: '',
+      const updateClub: Club_DTO = {
         ...this.clubForm.value
       };
-
-      // this.clubsService.addClub(newClub).subscribe(
-      //   (response) => {
-      //     this.clubs.push(response); // Ajouter le club à la liste
-      //     this.closeModal();
-      //     this.clubForm.reset(); // Réinitialisation du formulaire
-      //   },
-      //   (error) => {
-      //     console.error('Erreur lors de l’ajout du club :', error);
-      //   }
-      // );
+      console.log(updateClub);
+      this.clubsService.updateClub(updateClub).subscribe(
+        (response) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Le club a été modifié avec succès !',
+            showConfirmButton: true,
+            timer: 1500
+          });
+        },
+        (error) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Erreur lors de le mise a jour du club :',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      );
+      this.closeModal_();
+      this.clubForm.reset();
     }
   }
 

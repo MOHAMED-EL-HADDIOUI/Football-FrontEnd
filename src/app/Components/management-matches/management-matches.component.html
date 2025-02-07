@@ -63,7 +63,7 @@
                 <button class="bg-yellow-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="openModal_(game)">
                   ✏️
                 </button>
-                <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center">
+                <button class="bg-red-500 w-1/3 text-white px-3 py-1 rounded flex items-center" (click)="deleteMatche(game)">
                   🗑️
                 </button>
               </td>
@@ -373,14 +373,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="mb-4">
           <label for="season_" class="block text-sm font-medium text-gray-700">Season :</label>
-          <input type="text" id="season_" [value]="matcheData.season"
+          <input type="text" id="season_" formControlName="season"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                  placeholder="Entrez season"/>
         </div>
 
         <div class="mb-4">
           <label for="round_" class="block text-sm font-medium text-gray-700">Round :</label>
-          <input type="text" id="round_" [value]="matcheData.round"
+          <input type="text" id="round_" formControlName="round"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                  placeholder="Entrez round"/>
         </div>
@@ -404,7 +404,7 @@
             Rechercher
           </button>
         </div>
-        <select [value]="matcheData.homeClub.clubId" id="homeClub_"
+        <select formControlName="homeClub" id="homeClub_"
                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
           <option *ngFor="let club of clubs" [ngValue]="club.clubId">
             {{ club.name }}
@@ -451,7 +451,7 @@
             Rechercher
           </button>
         </div>
-        <select id="awayClub_"  [value]="matcheData.awayClub.clubId"
+        <select id="awayClub_"  formControlName="awayClub"
                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
           <option *ngFor="let club of clubs_" [ngValue]="club.clubId">
             {{ club.name }}
@@ -498,7 +498,7 @@
             Rechercher
           </button>
         </div>
-        <select formControlName="competition" id="competition_" [value]="matcheData.competition.competitionId"
+        <select formControlName="competition" id="competition_"
                 class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
           <option *ngFor="let competition of competitions" [ngValue]="competition.competitionId">
             {{ competition.name }}
@@ -531,90 +531,90 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="mb-4">
           <label for="date_" class="block text-sm font-medium text-gray-700">Date :</label>
-          <input type="date" id="date_" [value]="matcheData.date"
+          <input type="date" id="date_" formControlName="date"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="homeClubGoals" class="block text-sm font-medium text-gray-700">Home Club Goals :</label>
-          <input type="number" id="homeClubGoals_" [value]="matcheData.homeClubGoals"
+          <input type="number" id="homeClubGoals_" formControlName="homeClubGoals"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="awayClubGoals_" class="block text-sm font-medium text-gray-700">Away Club Goals :</label>
-          <input type="number" id="awayClubGoals_" [value]="matcheData.awayClubGoals"
+          <input type="number" id="awayClubGoals_" formControlName="awayClubGoals"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
         <div class="mb-4">
           <label for="homeClubPosition_" class="block text-sm font-medium text-gray-700">Home Club Position :</label>
-          <input type="number" id="homeClubPosition_" [value]="matcheData.homeClubPosition"
+          <input type="number" id="homeClubPosition_" formControlName="homeClubPosition"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
         <div class="mb-4">
           <label for="awayClubPosition_" class="block text-sm font-medium text-gray-700">Away Club Position :</label>
-          <input type="number" id="awayClubPosition_" [value]="matcheData.awayClubPosition"
+          <input type="number" id="awayClubPosition_" formControlName="awayClubPosition"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="homeClubManagerName_" class="block text-sm font-medium text-gray-700">Home Club Manager Name:</label>
-          <input type="text" id="homeClubManagerName_" [value]="matcheData.homeClubManagerName"
+          <input type="text" id="homeClubManagerName_" formControlName="homeClubManagerName"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="awayClubManagerName_" class="block text-sm font-medium text-gray-700">Away Club Manager Name:</label>
-          <input type="text" id="awayClubManagerName_" [value]="matcheData.awayClubManagerName"
+          <input type="text" id="awayClubManagerName_" formControlName="awayClubManagerName"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="stadium_" class="block text-sm font-medium text-gray-700">Stadium:</label>
-          <input type="text" id="stadium_" [value]="matcheData.stadium"
+          <input type="text" id="stadium_" formControlName="stadium"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
 
         <div class="mb-4">
           <label for="attendance_" class="block text-sm font-medium text-gray-700">Attendance :</label>
-          <input type="number" id="attendance_" [value]="matcheData.attendance"
+          <input type="number" id="attendance_" formControlName="attendance"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="referee_" class="block text-sm font-medium text-gray-700">Referee :</label>
-          <input type="text" id="referee_" [value]="matcheData.referee"
+          <input type="text" id="referee_" formControlName="referee"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="url_" class="block text-sm font-medium text-gray-700">Url :</label>
-          <input type="url" id="url_" [value]="matcheData.url"
+          <input type="url" id="url_" formControlName="url"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="homeClubFormation_" class="block text-sm font-medium text-gray-700">home Club Formation :</label>
-          <input type="number" id="homeClubFormation_" [value]="matcheData.homeClubFormation"
+          <input type="number" id="homeClubFormation_" formControlName="homeClubFormation"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="awayClubFormation_" class="block text-sm font-medium text-gray-700">away Club Formation :</label>
-          <input type="text" id="awayClubFormation_" [value]="matcheData.awayClubFormation"
+          <input type="text" id="awayClubFormation_" formControlName="awayClubFormation"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="aggregate_" class="block text-sm font-medium text-gray-700">aggregate :</label>
-          <input type="text" id="aggregate_" [value]="matcheData.aggregate"
+          <input type="text" id="aggregate_" formControlName="aggregate"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
 
         <div class="mb-4">
           <label for="competitionType_" class="block text-sm font-medium text-gray-700">Competition Type :</label>
-          <input type="text" id="competitionType_" [value]="matcheData.competitionType"
+          <input type="text" id="competitionType_" formControlName="competitionType"
                  class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"/>
         </div>
       </div>
@@ -625,7 +625,7 @@
                 class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">Annuler
         </button>
         <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900"
-         >Ajouter
+                [disabled]="matcheForm.invalid" >Ajouter
         </button>
       </div>
     </form>

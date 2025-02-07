@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {FooterComponent} from '../footer/footer.component';
 import {HeaderComponent} from '../header/header.component';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CompetitionDTO} from '../../Models/CompetitionDTO';
 import {CompetitionsService} from '../../Services/competitions.service';
 import {Router} from '@angular/router';
-import {ClubDTO} from '../../Models/ClubDTO';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-management-competitions',
@@ -32,10 +32,10 @@ export class ManagementCompetitionsComponent implements OnInit{
     { id: 'FR', name: 'France' },
     { id: 'ES', name: 'Espagne' },
     { id: 'DE', name: 'Allemagne' },
-    { id: 'IT', name: 'Italie' }
-  ];
+    { id: 'IT', name: 'Italie' },
+    { id: 'MA', name: 'Maroc' }
 
-  competitionData!:CompetitionDTO;
+  ];
 
   isModalOpen = false;
   isModalOpen_ = false;
@@ -45,10 +45,12 @@ export class ManagementCompetitionsComponent implements OnInit{
 
   ngOnInit(): void {
     this.competitionForm = this.fb.group({
+      competitionId:['', Validators.required],
       competitionCode: ['', Validators.required],
       name: ['', Validators.required],
       type: ['', Validators.required],
       subType: ['', Validators.required],
+      countryName:['', Validators.required],
       confederation: ['', Validators.required],
       countryId: ['', Validators.required],
       domesticLeagueCode: ['', Validators.required],
@@ -73,15 +75,29 @@ export class ManagementCompetitionsComponent implements OnInit{
     this.isModalOpen = true;
   }
   openModal_(competitionData:CompetitionDTO) {
-    this.competitionData=competitionData;
+    this.competitionForm = this.fb.group({
+      competitionId:competitionData.competitionId,
+      competitionCode: competitionData.competitionCode,
+      name: competitionData.name,
+      type: competitionData.type,
+      subType: competitionData.subType,
+      countryName:competitionData.countryName,
+      confederation: competitionData.confederation,
+      countryId: competitionData.countryId,
+      domesticLeagueCode: competitionData.domesticLeagueCode,
+      isMajorNationalLeague: competitionData.isMajorNationalLeague,
+      url: competitionData.url
+    });
     this.isModalOpen_ = true;
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.competitionForm.reset();
   }
   closeModal_() {
     this.isModalOpen_ = false;
+    this.competitionForm.reset();
   }
 
   searchCompetitions(): void {
@@ -104,10 +120,84 @@ export class ManagementCompetitionsComponent implements OnInit{
   }
 
   addCompetition() {
-
+    if (this.competitionForm.valid) {
+      const newCompetition: CompetitionDTO = {
+        ...this.competitionForm.value
+      };
+      this.competitionsService.addCompetition(newCompetition).subscribe(
+        (response) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Le Competition a été ajouté avec succès !',
+            showConfirmButton: true,
+            timer: 1500
+          });
+        },
+        (error) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Erreur lors de l’ajout du Competition :',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      );
+      this.closeModal();
+      this.competitionForm.reset();
+    }
   }
 
-  updateCompetition() {
-
+  updateCompetition(){
+    if (this.competitionForm.valid) {
+      const updateCompetition: CompetitionDTO = {
+        ...this.competitionForm.value
+      };
+      this.competitionsService.updateCompetition(updateCompetition).subscribe(
+        (response) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Le Competition a été modifié avec succès !',
+            showConfirmButton: true,
+            timer: 1500
+          });
+        },
+        (error) => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Erreur lors de l’modifier du Competition :',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      );
+      this.closeModal_();
+      this.competitionForm.reset();
+    }
+  }
+  deleteCompetition(competition:CompetitionDTO):void{
+    this.competitionsService.deleteCompetitionById(competition.competitionId).subscribe(
+      (response) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Le competition a été supprimé avec succès !',
+          showConfirmButton: true,
+          timer: 1500
+        });
+      },
+      (error) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Erreur lors de l’supprime du competition :',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    );
   }
 }
